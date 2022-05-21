@@ -223,3 +223,36 @@ const monthWidthStyles = $computed(() => {
   }
 })
 const mobileHeaderFallback = $computed(() => mode === 'range' ? 'Select dates' : 'Select date')
+const datesSelected = $computed(() => {
+  return !!(
+    (selectedDate1 && selectedDate1 !== '')
+    || (selectedDate2 && selectedDate2 !== '')
+  )
+})
+const allDatesSelected = $computed(() => {
+  return !!(
+    selectedDate1
+        && selectedDate1 !== ''
+        && selectedDate2
+        && selectedDate2 !== ''
+  )
+})
+const hasMinDate = $computed(() => !!(minDate && minDate !== ''))
+const isRangeMode = $computed(() => mode === 'range')
+const isSingleMode = $computed(() => mode === 'single')
+const datePickerWidth = $computed(() => width * showMonths)
+const datePropsCompound = $computed(() => dateOne + dateTwo) // used to watch for changes in props, and update GUI accordingly
+const isDateTwoBeforeDateOne = $computed(() => {
+  if (!dateTwo)
+    return false
+
+  return isBefore(dateTwo, dateOne)
+})
+const visibleMonths = $computed(() => {
+  const firstMonthArray = months.filter((m, index) => index > 0)
+  const numberOfMonthsArray = []
+  for (let i = 0; i < showMonths; i++)
+    numberOfMonthsArray.push(i)
+
+  return numberOfMonthsArray.map((_, index) => firstMonthArray[index].firstDateOfMonth)
+})
