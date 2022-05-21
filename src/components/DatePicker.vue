@@ -38,9 +38,12 @@ const {
   fullscreenMobile: boolean
   inline: boolean
   mobileHeader: string
-  disabledDates: Array<Date>
-  enabledDates: Array<Date>
-  customizedDates: Array<{ dates: Date[]; cssClass: string }>
+  disabledDates: Date[]
+  enabledDates: Date[]
+  customizedDates: {
+    dates: Date[]
+    cssClass: string
+  }[]
   showActionButtons: boolean
   showShortcutsMenuTrigger: boolean
   showMonthYearSelect: boolean

@@ -5,8 +5,30 @@ import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMon
 
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed', 'opened', 'previous-month', 'next-month', 'cancelled'])
 
+// reactive variables whose initial state may be provided through props
+let triggerElementId = $ref('')
 let dateOne: Date = $ref()
 let dateTwo: Date = $ref()
+let minDate: Date = $ref()
+let endDate: Date = $ref()
+let mode = $ref('range')
+let offsetX = $ref(0)
+let offsetY = $ref(0)
+let monthsToShow = $ref(2)
+let inline = $ref()
+// let mobileHeader = $ref('')
+let enabledDates = $ref([])
+let disabledDates = $ref([])
+let customizedDates = $ref([])
+let fullscreenMobile = $ref()
+let showActionButtons = $ref(true)
+// let showShortcutsMenuTrigger = $ref(true)
+let showMonthYearSelect = $ref(false)
+let yearsForSelect = $ref(10)
+let isTest = $ref(process.env.NODE_ENV === 'test')
+let trigger = $ref(false)
+let closeAfterSelect = $ref(false)
+
 let wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
 let dateFormat = $ref('yyyy-LL-dd')
 let dateLabelFormat = $ref('iiii, LLLL d, yyyy')
@@ -928,7 +950,7 @@ export function useDatePicker(
   startOpen: boolean,
   fullscreenMobile: boolean,
   inline: boolean,
-  mobileHeader: boolean,
+  mobileHeader: string,
   disabledDates: Date[],
   enabledDates: Date[],
   customizedDates: Date[],
@@ -963,6 +985,16 @@ export function useDatePicker(
   closeAfterSelect = closeAfterSelect
 
   return {
-    dateFormat
+    dateFormat,
+    wrapperClasses,
+    wrapperStyles,
+    innerStyles,
+    keyboardShortcutsMenuStyles,
+    monthWidthStyles,
+    mobileHeaderFallback,
+    datesSelected,
+    allDatesSelected,
+    texts,
+    datePickerWidth,
   }
 }
