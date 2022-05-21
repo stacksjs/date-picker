@@ -1,0 +1,22 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 error pnpm": {
+    "code": "ELIFECYCLE",
+    "errno": "ENOENT",
+    "syscall": "spawn",
+    "file": "sh",
+    "pkgid": "my-lib@0.11.0",
+    "stage": "dev",
+    "script": "vite dev --open --port 3333",
+    "pkgname": "my-lib",
+    "err": {
+      "name": "pnpm",
+      "message": "my-lib@0.11.0 dev: `vite dev --open --port 3333`\nspawn ENOENT",
+      "code": "ELIFECYCLE",
+      "stack": "pnpm: my-lib@0.11.0 dev: `vite dev --open --port 3333`\nspawn ENOENT\n    at ChildProcess.<anonymous> (/Users/chrisbreuer/.node/corepack/pnpm/7.1.2/dist/pnpm.cjs:93455:22)\n    at ChildProcess.emit (node:events:527:28)\n    at maybeClose (node:internal/child_process:1090:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:302:5)"
+    }
+  },
+  "2 warn pnpm:global": " Local package.json exists, but node_modules missing, did you mean to install?"
+}

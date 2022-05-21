@@ -59,6 +59,7 @@
     "commit-msg": "npx commitlint --config ./commitlint.config.ts --edit $1"
   },
   "dependencies": {
+    "date-fns": "^2.28.0",
     "vue": "^3.2.35"
   },
   "devDependencies": {
