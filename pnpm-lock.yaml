@@ -33,7 +33,7 @@ specifiers:
   unplugin-vue-components: ^0.19.5
   upath: ^2.0.1
   vite: ^2.9.9
-  vitest: ^0.12.7
+  vitest: ^0.12.9
   vue: ^3.2.35
   vue-tsc: ^0.34.15
 
