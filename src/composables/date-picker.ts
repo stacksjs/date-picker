@@ -420,7 +420,9 @@ function trapKeyboardInput(event: any) {
   // except for the enter key, which is needed to activate buttons
   const shortcutKeyCodes = Object.keys(keys).map(key => keys[key])
   shortcutKeyCodes.splice(shortcutKeyCodes.indexOf(13), 1)
+
   const shouldPreventDefault = shortcutKeyCodes.includes(event.keyCode)
+
   if (shouldPreventDefault)
     event.preventDefault()
 }
@@ -433,69 +435,109 @@ function handleKeyboardInput(event: any) {
     else
       closeDatepicker()
   }
+
   else if (showKeyboardShortcutsMenu) {
     // if keyboard shortcutsMenu is open, then esc is the only key we want to have fire events
   }
+
   else if (shouldHandleInput(event, keys.arrowDown)) {
+    if (!focusedDate)
+      return
+
     const newDate = addWeeks(focusedDate, 1)
     const changeMonths = !isSameMonth(newDate, focusedDate)
     setFocusedDate(newDate)
+
     if (changeMonths)
       nextMonth()
   }
+
   else if (shouldHandleInput(event, keys.arrowUp)) {
+    if (!focusedDate)
+      return
+
     const newDate = subWeeks(focusedDate, 1)
     const changeMonths = !isSameMonth(newDate, focusedDate)
     setFocusedDate(newDate)
+
     if (changeMonths)
       previousMonth()
   }
+
   else if (shouldHandleInput(event, keys.arrowRight)) {
+    if (!focusedDate)
+      return
+
     const newDate = addDays(focusedDate, 1)
     const changeMonths = !isSameMonth(newDate, focusedDate)
     setFocusedDate(newDate)
+
     if (changeMonths)
       nextMonth()
   }
+
   else if (shouldHandleInput(event, keys.arrowLeft)) {
+    if (!focusedDate)
+      return
+
     const newDate = subDays(focusedDate, 1)
     const changeMonths = !isSameMonth(newDate, focusedDate)
     setFocusedDate(newDate)
+
     if (changeMonths)
       previousMonth()
   }
+
   else if (shouldHandleInput(event, keys.enter)) {
     // on enter key, only select the date if a date is currently in focus
     const target = event.target
     if (!showKeyboardShortcutsMenu && target && target.tagName === 'TD')
       selectDate(focusedDate)
   }
+
   else if (shouldHandleInput(event, keys.pgUp)) {
+    if (!focusedDate)
+      return
+
     setFocusedDate(subMonths(focusedDate, 1))
     previousMonth()
   }
+
   else if (shouldHandleInput(event, keys.pgDn)) {
     setFocusedDate(addManyMonths(focusedDate, 1))
     nextMonth()
   }
+
   else if (shouldHandleInput(event, keys.home)) {
+    if (!focusedDate)
+      return
+
     const newDate = startOfWeek(focusedDate, {
       weekStartsOn: sundayFirst ? 0 : 1,
     })
+
     const changeMonths = !isSameMonth(newDate, focusedDate)
     setFocusedDate(newDate)
+
     if (changeMonths)
       previousMonth()
   }
+
   else if (shouldHandleInput(event, keys.end)) {
+    if (!focusedDate)
+      return
+
     const newDate = endOfWeek(focusedDate, {
       weekStartsOn: sundayFirst ? 0 : 1,
     })
+
     const changeMonths = !isSameMonth(newDate, focusedDate)
     setFocusedDate(newDate)
+
     if (changeMonths)
       nextMonth()
   }
+
   else if (shouldHandleInput(event, keys.questionMark)) {
     openKeyboardShortcutsMenu()
   }
@@ -519,11 +561,14 @@ function setDateFromText(value: any) {
     // convert to yyyy-MM-dd
     value = `${value.substring(6, 10)}-${value.substring(3, 5)}-${value.substring(0, 2)}`
   }
+
   const valueAsDateObject = new Date(value)
+
   if (!isValid(valueAsDateObject))
     return
 
   const formattedDate = format(valueAsDateObject, dateFormat)
+
   if (
     isDateDisabled(formattedDate)
         || isBeforeMinDate(formattedDate)
