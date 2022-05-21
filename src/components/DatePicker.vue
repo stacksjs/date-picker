@@ -49,5 +49,28 @@ const {
   closeAfterSelect: boolean
 }>()
 
-const { dateFormat } = useDatePicker()
+const { dateFormat } = useDatePicker(
+  triggerElementId,
+  dateOne,
+  dateTwo,
+  minDate,
+  endDate,
+  mode,
+  offsetY,
+  offsetX,
+  monthsToShow,
+  startOpen,
+  fullscreenMobile,
+  inline,
+  mobileHeader,
+  disabledDates,
+  enabledDates,
+  customizedDates,
+  showActionButtons,
+  showShortcutsMenuTrigger,
+  showMonthYearSelect,
+  yearsForSelect,
+  trigger,
+  closeAfterSelect,
+)
 </script>

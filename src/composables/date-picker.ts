@@ -3,7 +3,7 @@ import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMon
 // import ResizeSelect from '../directives/ResizeSelect'
 // import { copyObject, findAncestor } from './../helpers'
 
-const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed'])
+const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed', 'opened', 'previous-month', 'next-month', 'cancelled'])
 
 let dateOne: Date = $ref()
 let dateTwo: Date = $ref()
@@ -790,7 +790,7 @@ function previousMonth() {
   startingDate = subtractMonths(months[0].firstDateOfMonth)
   months.unshift(getMonth(startingDate))
   months.splice(months.length - 1, 1)
-  $emit('previous-month', visibleMonths)
+  emit('previous-month', visibleMonths)
   resetFocusedDate(false)
 }
 
@@ -798,7 +798,7 @@ function nextMonth() {
   startingDate = addMonths(months[months.length - 1].firstDateOfMonth)
   months.push(getMonth(startingDate))
   months.splice(0, 1)
-  $emit('next-month', visibleMonths)
+  emit('next-month', visibleMonths)
   resetFocusedDate(true)
 }
 
@@ -840,7 +840,7 @@ function openDatepicker() {
   showDatePicker = true
   initialDate1 = dateOne
   initialDate2 = dateTwo
-  $emit('opened')
+  emit('opened')
   $nextTick(() => {
     if (!inline)
       setFocusedDate(focusedDate)
@@ -851,7 +851,7 @@ function closeDatepickerCancel() {
   if (showDatePicker) {
     selectedDate1 = initialDate1
     selectedDate2 = initialDate2
-    $emit('cancelled')
+    emit('cancelled')
     closeDatepicker()
   }
 }
@@ -915,7 +915,53 @@ function positionDatepicker() {
   })
 }
 
-export function useDatePicker() {
+export function useDatePicker(
+  triggerElementId: string,
+  dateOne: Date,
+  dateTwo: Date,
+  minDate: Date,
+  endDate: Date,
+  mode: string,
+  offsetY: number,
+  offsetX: number,
+  monthsToShow: number,
+  startOpen: boolean,
+  fullscreenMobile: boolean,
+  inline: boolean,
+  mobileHeader: boolean,
+  disabledDates: Date[],
+  enabledDates: Date[],
+  customizedDates: Date[],
+  showActionButtons: boolean,
+  showShortcutsMenuTrigger: boolean,
+  showMonthYearSelect: boolean,
+  yearsForSelect: number,
+  trigger: string,
+  closeAfterSelect: boolean,
+) {
+  triggerElementId = triggerElementId
+  dateOne = dateOne
+  dateTwo = dateTwo
+  minDate = minDate
+  endDate = endDate
+  mode = mode
+  offsetY = offsetY
+  offsetX = offsetX
+  monthsToShow = monthsToShow
+  startOpen = startOpen
+  fullscreenMobile = fullscreenMobile
+  inline = inline
+  mobileHeader = mobileHeader
+  disabledDates = disabledDates
+  enabledDates = enabledDates
+  customizedDates = customizedDates
+  showActionButtons = showActionButtons
+  showShortcutsMenuTrigger = showShortcutsMenuTrigger
+  showMonthYearSelect = showMonthYearSelect
+  yearsForSelect = yearsForSelect
+  trigger = trigger
+  closeAfterSelect = closeAfterSelect
+
   return {
     dateFormat
   }
