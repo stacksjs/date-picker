@@ -6,8 +6,8 @@ import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMon
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed'])
 
 const wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
-const dateFormat = $ref('YYYY-MM-DD')
-const dateLabelFormat = $ref('dddd, MMMM D, YYYY')
+const dateFormat = $ref('yyyy-LL-dd')
+const dateLabelFormat = $ref('iiii, LLLL d, yyyy')
 const showDatePicker = $ref(false)
 let showKeyboardShortcutsMenu = $ref(false)
 let showMonths = $ref(2)
@@ -174,7 +174,9 @@ const hasMinDate = $computed(() => !!(minDate && minDate !== ''))
 const isRangeMode = $computed(() => mode === 'range')
 const isSingleMode = $computed(() => mode === 'single')
 const datePickerWidth = $computed(() => width * showMonths)
-const datePropsCompound = $computed(() => dateOne + dateTwo) // used to watch for changes in props, and update GUI accordingly
+const dateOne: Date = $ref()
+const dateTwo: Date = $ref()
+const datePropsCompound = $computed(() => `${dateOne.toString} ${dateTwo.toString}`) // used to watch for changes in props, and update GUI accordingly
 const isDateTwoBeforeDateOne = $computed(() => {
   if (!dateTwo)
     return false
@@ -218,7 +220,7 @@ watch(endDate, () => {
   generateYears()
 })
 
-watch(datePropsCompound, (newValue) => {
+watch(datePropsCompound, () => {
   if (dateOne !== selectedDate1) {
     startingDate = dateOne
     setStartDates()
@@ -477,7 +479,7 @@ function setDateFromText(value: any) {
   if (!value || value.length < 10)
     return
 
-  // make sure format is either 'YYYY-MM-DD' or 'DD.MM.YYYY'
+  // make sure format is either 'yyyy-MM-dd' or 'DD.MM.YYYY'
   const isFormatYearFirst = value.match(
     /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/,
   )
@@ -488,7 +490,7 @@ function setDateFromText(value: any) {
     return
 
   if (isFormatDayFirst) {
-    // convert to YYYY-MM-DD
+    // convert to yyyy-MM-dd
     value = `${value.substring(6, 10)}-${value.substring(3, 5)}-${value.substring(0, 2)}`
   }
   const valueAsDateObject = new Date(value)
@@ -611,7 +613,7 @@ function getMonth(date: any) {
 function getWeeks(date: any) {
   const weekDayNotInMonth = { dayNumber: 0 }
   const daysInMonth = getDaysInMonth(date: any)
-  const year = format(date, 'YYYY')
+  const year = format(date, 'yyyy')
   const month = format(date, 'MM')
   let firstDayInWeek = parseInt(format(date, sundayFirst ? 'd' : 'E'))
   if (sundayFirst) {

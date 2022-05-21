@@ -24,10 +24,10 @@ const {
   closeAfterSelect = false,
 } = defineProps<{
   triggerElementId: string
-  dateOne: string | Date
-  dateTwo: string | Date
-  minDate: string | Date
-  endDate: string | Date
+  dateOne: Date
+  dateTwo: Date
+  minDate: Date
+  endDate: Date
   mode: string
   offsetY: number
   offsetX: number
@@ -36,9 +36,9 @@ const {
   fullscreenMobile: boolean
   inline: boolean
   mobileHeader: string
-  disabledDates: Array<[]>
-  enabledDates: Array<[]>
-  customizedDates: Array<[]>
+  disabledDates: Array<Date>
+  enabledDates: Array<Date>
+  customizedDates: Array<{ dates: Date[]; cssClass: string }>
   showActionButtons: boolean
   showShortcutsMenuTrigger: boolean
   showMonthYearSelect: boolean

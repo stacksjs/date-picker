@@ -1,29 +1,30 @@
 <script setup lang="ts">
 import { format } from 'date-fns'
 import { DatePicker } from '~/index'
+import { useDatePicker } from '~/composables/date-picker'
 
-const dateFormat = $ref('YYYY-MM-DD')
-let inputDateOne = $ref('')
-let inputDateTwo = $ref('')
-const inputSingleDateOne = $ref('')
-const inputSingleDateTwo = $ref('')
-const buttonDateOne = $ref('')
-const buttonDateTwo = $ref('')
-const inlineDateOne = $ref('')
-const withDisabledDatesDateOne = $ref('')
-const callbackDateOne = $ref('')
-const callbackDateTwo = $ref('')
-const sundayFirst = $ref(false)
+const { dateFormat } = useDatePicker()
+
+let inputDateOne: Date = $ref()
+const inputDateTwo: Date = $ref()
+const inputSingleDateOne: Date = $ref()
+const inputSingleDateTwo: Date = $ref()
+const buttonDateOne: Date = $ref()
+const buttonDateTwo: Date = $ref()
+const inlineDateOne: Date = $ref()
+const withDisabledDatesDateOne: Date = $ref()
+const callbackDateOne: Date = $ref()
+const callbackDateTwo: Date = $ref()
+// const sundayFirst = $ref(false)
 let alignRight = $ref(false)
 let showDatePickers = $ref(true)
 let trigger = $ref(false)
 
-const disabledDates = $computed(() => ['2018-12-30', '2018-12-10', '2018-12-14'])
+const disabledDates = $computed(() => [new Date('2018-12-30'), new Date('2018-12-10'), new Date('2018-12-14')])
 
 onBeforeMount(() => {
   setTimeout(() => {
-    inputDateOne = '2019-01-12'
-    inputDateTwo = ''
+    inputDateOne = new Date('2019-01-12')
   }, 5000)
 })
 
@@ -109,12 +110,12 @@ function changeMonthMethod(visibleMonths: any) {
             mode="range"
             :date-one="inputDateOne"
             :date-two="inputDateTwo"
-            min-date="2018-08-28"
+            :min-date="new Date('2018-08-28')"
             :months-to-show="2"
             :show-action-buttons="true"
             :show-month-year-select="true"
-            @date-one-selected="val => { inputDateOne = val }"
-            @date-two-selected="val => { inputDateTwo = val }"
+            @dateOneSelected="val => { inputDateOne = val }"
+            @dateTwoSelected="val => { inputDateTwo = val }"
           />
         </div>
       </div>
@@ -151,7 +152,7 @@ function changeMonthMethod(visibleMonths: any) {
             mode="range"
             :date-one="buttonDateOne"
             :date-two="buttonDateTwo"
-            min-date="2018-04-18"
+            :min-date="new Date('2018-04-18')"
             :fullscreen-mobile="true"
             :months-to-show="2"
             :trigger="trigger"
@@ -178,8 +179,14 @@ function changeMonthMethod(visibleMonths: any) {
           :fullscreen-mobile="false"
           :date-one="inlineDateOne"
           :months-to-show="2"
-          :disabled-dates="['2018-04-30', '2018-05-10', '2018-12-14']"
-          :customized-dates="[{ dates: ['2019-03-21', '2019-03-22', '2019-03-23', '2019-03-24'], cssClass: 'booked' }, { dates: ['2019-03-21', '2019-03-22', '2019-03-23', '2019-04-24'], cssClass: 'not-available' }]"
+          :disabled-dates="[new Date('2018-04-30'), new Date('2018-05-10'), new Date('2018-12-14')]"
+          :customized-dates="[{
+            dates: [new Date('2019-03-21'), new Date('2019-03-22'), new Date('2019-03-23'), new Date('2019-03-24')],
+            cssClass: 'booked',
+          }, {
+            dates: [new Date('2019-03-21'), new Date('2019-03-22'), new Date('2019-03-23'), new Date('2019-04-24')],
+            cssClass: 'not-available',
+          }]"
           @date-one-selected="val => { inlineDateOne = val }"
         />
       </div>
