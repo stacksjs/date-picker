@@ -17,7 +17,7 @@ const {
   mobileHeader,
   disabledDates = [],
   enabledDates = [],
-  customizedDates = [],
+  customizedDates = { dates: [], cssClass: '' },
   showActionButtons = true,
   showShortcutsMenuTrigger = true,
   showMonthYearSelect = true,
@@ -43,7 +43,7 @@ const {
   customizedDates: {
     dates: Date[]
     cssClass: string
-  }[]
+  }
   showActionButtons: boolean
   showShortcutsMenuTrigger: boolean
   showMonthYearSelect: boolean

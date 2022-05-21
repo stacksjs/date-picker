@@ -6,36 +6,37 @@ import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMon
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed', 'opened', 'previous-month', 'next-month', 'cancelled'])
 
 // reactive variables whose initial state may be provided through props
-let triggerElementId = $ref('')
-let dateOne: Date = $ref()
-let dateTwo: Date = $ref()
-let minDate: Date = $ref()
-let endDate: Date = $ref()
-let mode = $ref('range')
-let offsetX = $ref(0)
-let offsetY = $ref(0)
-let monthsToShow = $ref(2)
-let inline = $ref()
+const triggerElementId = $ref('')
+const dateOne: Date = $ref()
+const dateTwo: Date = $ref()
+const minDate: Date = $ref()
+const endDate: Date = $ref()
+const mode = $ref('range')
+const offsetX = $ref(0)
+const offsetY = $ref(0)
+const monthsToShow = $ref(2)
+const startOpen = $ref(false)
+const inline = $ref()
 // let mobileHeader = $ref('')
-let enabledDates = $ref([])
-let disabledDates = $ref([])
-let customizedDates = $ref([])
-let fullscreenMobile = $ref()
-let showActionButtons = $ref(true)
+const enabledDates = $ref([])
+const disabledDates = $ref([])
+const customizedDates = $ref([])
+const fullscreenMobile = $ref()
+const showActionButtons = $ref(true)
 // let showShortcutsMenuTrigger = $ref(true)
-let showMonthYearSelect = $ref(false)
-let yearsForSelect = $ref(10)
-let isTest = $ref(process.env.NODE_ENV === 'test')
-let trigger = $ref(false)
-let closeAfterSelect = $ref(false)
+const showMonthYearSelect = $ref(false)
+const yearsForSelect = $ref(10)
+const isTest = $ref(process.env.NODE_ENV === 'test')
+const trigger = $ref(false)
+const closeAfterSelect = $ref(false)
 
-let wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
-let dateFormat = $ref('yyyy-LL-dd')
+const wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
+const dateFormat = $ref('yyyy-LL-dd')
 let dateLabelFormat = $ref('iiii, LLLL d, yyyy')
 let showDatePicker = $ref(false)
 let showKeyboardShortcutsMenu = $ref(false)
 let showMonths = $ref(2)
-let colors = $ref({
+const colors = $ref({
   selected: '#00a699',
   inRange: '#66e2da',
   selectedText: '#fff',
@@ -57,15 +58,15 @@ let ariaLabels = $ref({
   openKeyboardShortcutsMenu: 'Open keyboard shortcuts menu.',
   closeKeyboardShortcutsMenu: 'Close keyboard shortcuts menu',
 })
-let startingDate = $ref('')
-let focusedDate = $ref('')
+let startingDate: Date | null = $ref()
+let focusedDate: Date | null = $ref()
 let months = $ref([])
 let years = $ref([])
-let width = $ref(300)
-let selectedDate1 = $ref('')
-let selectedDate2 = $ref('')
+const width = $ref(300)
+let selectedDate1: Date | null = $ref()
+let selectedDate2: Date | null = $ref()
 let isSelectingDate1 = $ref(true)
-let hoverDate = $ref('')
+let hoverDate: Date = $ref()
 let alignRight = $ref(false)
 let triggerPosition = $ref({
   height: 0,
@@ -79,7 +80,7 @@ const triggerWrapperPosition = $ref({
 let viewportWidth = $ref('')
 let isMobile = $ref(false)
 let isTablet = $ref(false)
-const triggerElement = $ref(undefined)
+let triggerElement: HTMLElement | null = $ref()
 
 const showFullscreen = $computed(() => isMobile && fullscreenMobile)
 const wrapperClasses = $computed(() => {
@@ -119,25 +120,13 @@ const monthWidthStyles = $computed(() => {
   }
 })
 const mobileHeaderFallback = $computed(() => mode === 'range' ? 'Select dates' : 'Select date')
-const datesSelected = $computed(() => {
-  return !!(
-    (selectedDate1 && selectedDate1 !== '')
-    || (selectedDate2 && selectedDate2 !== '')
-  )
-})
-const allDatesSelected = $computed(() => {
-  return !!(
-    selectedDate1
-        && selectedDate1 !== ''
-        && selectedDate2
-        && selectedDate2 !== ''
-  )
-})
-const hasMinDate = $computed(() => !!(minDate && minDate !== ''))
+const datesSelected = $computed(() => !!(selectedDate1 || selectedDate2))
+const allDatesSelected = $computed(() => !!(selectedDate1 && selectedDate2))
+const hasMinDate = $computed(() => !!(minDate))
 const isRangeMode = $computed(() => mode === 'range')
 const isSingleMode = $computed(() => mode === 'single')
 const datePickerWidth = $computed(() => width * showMonths)
-const datePropsCompound = $computed(() => `${dateOne.toString} ${dateTwo.toString}`) // used to watch for changes in props, and update GUI accordingly
+const datePropsCompound = $computed(() => `${dateOne?.toString} ${dateTwo?.toString}`) // used to watch for changes in props, and update GUI accordingly
 const isDateTwoBeforeDateOne = $computed(() => {
   if (!dateTwo)
     return false
@@ -214,15 +203,26 @@ const keys = {
   esc: 27,
 }
 
-watch(selectedDate1, (newValue, oldValue) => {
-  const newDate = !newValue || newValue === '' ? '' : format(newValue, dateFormat)
-  emit('dateOneSelected', newDate)
-})
+if (selectedDate1) {
+  watch(selectedDate1, (newValue) => {
+    if (!selectedDate1)
+      return
 
-watch(selectedDate2, (newValue, oldValue) => {
-  const newDate = !newValue || newValue === '' ? '' : format(newValue, dateFormat)
-  emit('dateTwoSelected', newDate)
-})
+    const date = new Date(newValue)
+    const newDate = format(date, dateFormat)
+
+    emit('dateOneSelected', newDate)
+  })
+}
+
+if (selectedDate2) {
+  watch(selectedDate2, (newValue) => {
+    const date = new Date(newValue)
+    const newDate = format(date, dateFormat)
+
+    emit('dateTwoSelected', newDate)
+  })
+}
 
 watch(mode, () => {
   setStartDates()
@@ -251,7 +251,7 @@ watch(datePropsCompound, () => {
   }
 
   if (isDateTwoBeforeDateOne) {
-    selectedDate2 = ''
+    selectedDate2 = null
     emit('dateTwoSelected', '')
   }
 })
@@ -271,25 +271,17 @@ onBeforeMount(() => {
     setSundayToFirstDayInWeek()
 })
 
+const handleWindowResizeEvent = useDebounceFn(() => {
+  positionDatepicker()
+  setStartDates()
+}, 200)
+
 onMounted(() => {
   viewportWidth = `${window.innerWidth}px`
   isMobile = window.innerWidth < 768
   isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024
 
-  _handleWindowResizeEvent = useDebounceFn(() => {
-    positionDatepicker()
-    setStartDates()
-  }, 200)
-
-  _handleWindowClickEvent = (event: any) => {
-    if (event.target.id === triggerElementId) {
-      event.stopPropagation()
-      event.preventDefault()
-      toggleDatepicker()
-    }
-  }
-
-  window.addEventListener('resize', _handleWindowResizeEvent)
+  // window.addEventListener('resize', handleWindowResizeEvent)
 
   triggerElement = isTest
     ? document.createElement('input')
@@ -302,29 +294,43 @@ onMounted(() => {
   if (startOpen || inline)
     openDatepicker()
 
-  $el.addEventListener('keyup', handleKeyboardInput)
-  $el.addEventListener('keydown', trapKeyboardInput)
+  // $el.addEventListener('keyup', handleKeyboardInput)
+  // $el.addEventListener('keydown', trapKeyboardInput)
 
-  triggerElement.addEventListener('keyup', handleTriggerInput)
-  triggerElement.addEventListener('click', _handleWindowClickEvent)
+  if (triggerElement) {
+    triggerElement.addEventListener('keyup', handleTriggerInput)
+    triggerElement.addEventListener('click', handleWindowClickEvent)
+  }
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', _handleWindowResizeEvent)
-  window.removeEventListener('click', _handleWindowClickEvent)
-  $el.removeEventListener('keyup', handleKeyboardInput)
-  $el.removeEventListener('keydown', trapKeyboardInput)
+  window.removeEventListener('resize', handleWindowResizeEvent)
+  window.removeEventListener('click', handleWindowClickEvent)
+
+  // $el.removeEventListener('keyup', handleKeyboardInput)
+  // $el.removeEventListener('keydown', trapKeyboardInput)
+
+  if (!triggerElement)
+    return
+
   triggerElement.removeEventListener('keyup', handleTriggerInput)
-  triggerElement.removeEventListener('click', _handleWindowClickEvent)
+  triggerElement.removeEventListener('click', handleWindowClickEvent)
 })
+
+function handleWindowClickEvent(event: any) {
+  if (event.target.id === triggerElementId) {
+    event.stopPropagation()
+    event.preventDefault()
+    toggleDatepicker()
+  }
+}
 
 function randomString(length: number) {
   let text = ''
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length))
-  }
 
   return text
 }
@@ -340,28 +346,28 @@ function isSelected(date: any) {
   return selectedDate1 === date || selectedDate2 === date
 }
 
-function getDayStyles(date: any) {
+function getDayStyles(date: Date) {
   const selected = isSelected(date)
   const inRange = isInRange(date)
   const disabled = isDisabled(date)
-  const hoveredInRange = isHoveredInRange(date)
+
   const styles = {
     width: `${(width - 30) / 7}px`,
     background: selected
       ? colors.selected
-      : hoveredInRange
+      : isHoveredInRange(date)
         ? colors.hoveredInRange
         : inRange
           ? colors.inRange
           : '',
     color: disabled
       ? colors.selectedText
-      : isInRange || hoveredInRange
+      : isInRange || isHoveredInRange(date)
         ? colors.selectedText
         : colors.text,
     border: selected
       ? `1px double ${colors.selected}`
-      : (inRange && allDatesSelected) || isHoveredInRange
+      : (inRange && allDatesSelected) || isHoveredInRange(date)
           ? `1px double ${colors.inRangeBorder}`
           : '',
   }
@@ -371,7 +377,7 @@ function getDayStyles(date: any) {
   return styles
 }
 
-function getAriaLabelForDate(date: any) {
+function getAriaLabelForDate(date: Date) {
   const dateLabel = format(date, dateLabelFormat)
   const disabled = isDisabled(date)
 
@@ -385,12 +391,10 @@ function getAriaLabelForDate(date: any) {
     if (isSelectingDate1)
       return ariaLabels.chooseStartDate(dateLabel)
 
-    else
-      return ariaLabels.chooseEndDate(dateLabel)
+    return ariaLabels.chooseEndDate(dateLabel)
   }
-  else {
-    return ariaLabels.chooseDate(dateLabel)
-  }
+
+  return ariaLabels.chooseDate(dateLabel)
 }
 
 function handleClickOutside(event: any) {
@@ -555,10 +559,13 @@ function generateMonths() {
 function generateYears() {
   if (!showMonthYearSelect)
     return
-  years = []
+
   const currentYear = getYear(startingDate)
   const startYear = minDate ? getYear(minDate) : currentYear - yearsForSelect
   const endYear = endDate ? getYear(endDate) : currentYear + yearsForSelect
+
+  years = []
+
   for (let year = startYear; year <= endYear; year++)
     years.push(year.toString())
 }
@@ -634,9 +641,9 @@ function getMonthOf(date: any) {
   }
 }
 
-function getWeeks(date: any) {
+function getWeeks(date: Date) {
   const weekDayNotInMonth = { dayNumber: 0 }
-  const daysInMonth = getDaysInMonth(date: any)
+  const daysInMonth = getDaysInMonth(date)
   const year = format(date, 'yyyy')
   const month = format(date, 'MM')
   let firstDayInWeek = parseInt(format(date, sundayFirst ? 'd' : 'E'))
@@ -674,7 +681,7 @@ function getWeeks(date: any) {
 }
 
 function selectDate(date: any) {
-  if (isBeforeMinDate(date: any) || isAfterEndDate(date: any) || isDateDisabled(date: any))
+  if (isBeforeMinDate(date) || isAfterEndDate(date) || isDateDisabled(date))
     return
 
   if (mode === 'single') {
@@ -719,7 +726,7 @@ function setFocusedDate(date: any) {
   }
 }
 
-function resetFocusedDate(setToFirst) {
+function resetFocusedDate(setToFirst: any) {
   if (focusedDate && !isDateVisible(focusedDate)) {
     const visibleMonthIdx = setToFirst ? 0 : visibleMonths.length - 1
     const targetMonth = visibleMonths[visibleMonthIdx]
@@ -750,31 +757,31 @@ function isInRange(date: any) {
   )
 }
 
-function isHoveredInRange(date: any) {
+function isHoveredInRange(date: Date) {
   if (isSingleMode || allDatesSelected)
     return false
 
   return (
-    (isAfter(date, selectedDate1) && isBefore(date, hoverDate))
-        || (isAfter(date, hoverDate) && isBefore(date, selectedDate1))
+    (isAfter(date, selectedDate1 as Date) && isBefore(date, hoverDate))
+        || (isAfter(date, hoverDate) && isBefore(date, selectedDate1 as Date))
   )
 }
 
-function isBeforeMinDate(date: any) {
+function isBeforeMinDate(date: Date) {
   if (!minDate)
     return false
 
   return isBefore(date, minDate)
 }
 
-function isAfterEndDate(date: any) {
+function isAfterEndDate(date: Date) {
   if (!endDate)
     return false
 
   return isAfter(date, endDate)
 }
 
-function isDateVisible(date: any) {
+function isDateVisible(date: Date) {
   if (!date)
     return false
 
@@ -783,20 +790,19 @@ function isDateVisible(date: any) {
   return isAfter(date, start) && isBefore(date, end)
 }
 
-function isDateDisabled(date: any) {
+function isDateDisabled(date: Date) {
   if (enabledDates.length > 0)
-    return !enabledDates.includes(date: any)
+    return !enabledDates.includes(date)
 
-  else
-    return disabledDates.includes(date: any)
+  return disabledDates.includes(date)
 }
 
-function customizedDateClass(date: any) {
+function customizedDateClass(date: Date) {
   let customizedClasses = ''
 
   if (customizedDates.length > 0) {
     for (let i = 0; i < customizedDates.length; i++) {
-      if (customizedDates[i].dates.includes(date: any))
+      if (customizedDates[i].dates.includes(date))
         customizedClasses += ` asd__day--${customizedDates[i].cssClass}`
     }
   }
@@ -804,8 +810,8 @@ function customizedDateClass(date: any) {
   return customizedClasses
 }
 
-function isDisabled(date: any) {
-  return isDateDisabled(date: any) || isBeforeMinDate(date: any) || isAfterEndDate(date: any)
+function isDisabled(date: Date) {
+  return isDateDisabled(date) || isBeforeMinDate(date) || isAfterEndDate(date)
 }
 
 function previousMonth() {
@@ -869,7 +875,7 @@ function openDatepicker() {
   })
 }
 
-function closeDatepickerCancel() {
+function closeDatePickerCancel() {
   if (showDatePicker) {
     selectedDate1 = initialDate1
     selectedDate2 = initialDate2
@@ -953,7 +959,7 @@ export function useDatePicker(
   mobileHeader: string,
   disabledDates: Date[],
   enabledDates: Date[],
-  customizedDates: Date[],
+  customizedDates: [],
   showActionButtons: boolean,
   showShortcutsMenuTrigger: boolean,
   showMonthYearSelect: boolean,
@@ -989,6 +995,7 @@ export function useDatePicker(
     wrapperClasses,
     wrapperStyles,
     innerStyles,
+    keyboardShortcuts,
     keyboardShortcutsMenuStyles,
     monthWidthStyles,
     mobileHeaderFallback,
@@ -996,5 +1003,11 @@ export function useDatePicker(
     allDatesSelected,
     texts,
     datePickerWidth,
+    getDayStyles,
+    closeDatePickerCancel,
+    getAriaLabelForDate,
+    handleClickOutside,
+    trapKeyboardInput,
+    handleKeyboardInput,
   }
 }
