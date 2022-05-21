@@ -910,3 +910,9 @@ function positionDatepicker() {
     alignRight = rightPosition > viewportWidth
   })
 }
+
+export function useDatePicker() {
+  return {
+    dateFormat
+  }
+}

@@ -1,72 +1,82 @@
 <script setup lang="ts">
-import { DatePicker } from '~/index'
 import { format } from 'date-fns'
+import { DatePicker } from '~/index'
 
-//       dateFormat: 'YYYY-MM-DD', //'D MMM',
-//       inputDateOne: '',
-//       inputDateTwo: '',
-//       inputSingleDateOne: '',
-//       inputSingleDateTwo: '',
-//       buttonDateOne: '',
-//       buttonDateTwo: '',
-//       inlineDateOne: '',
-//       withDisabledDatesDateOne: '',
-//       callbackDateOne: '',
-//       callbackDateTwo: '',
-//       sundayFirst: false,
-//       alignRight: false,
-//       showDatepickers: true,
-//       trigger: false,
+const dateFormat = $ref('YYYY-MM-DD')
+let inputDateOne = $ref('')
+let inputDateTwo = $ref('')
+const inputSingleDateOne = $ref('')
+const inputSingleDateTwo = $ref('')
+const buttonDateOne = $ref('')
+const buttonDateTwo = $ref('')
+const inlineDateOne = $ref('')
+const withDisabledDatesDateOne = $ref('')
+const callbackDateOne = $ref('')
+const callbackDateTwo = $ref('')
+const sundayFirst = $ref(false)
+let alignRight = $ref(false)
+let showDatePickers = $ref(true)
+let trigger = $ref(false)
 
-//   computed: {
-//     disabledDates() {
-//       return ['2018-12-30', '2018-12-10', '2018-12-14']
-//     },
-//   },
-//   created() {
-//     setTimeout(() => {
-//       this.inputDateOne = '2019-01-12'
-//       this.inputDateTwo = ''
-//     }, 5000)
-//   },
-//   methods: {
-//     formatDates(dateOne, dateTwo) {
-//       let formattedDates = ''
-//       if (dateOne) {
-//         formattedDates = format(dateOne, this.dateFormat)
-//       }
-//       if (dateTwo) {
-//         formattedDates += ' - ' + format(dateTwo, this.dateFormat)
-//       }
-//       return formattedDates
-//     },
-//     toggleAlign() {
-//       this.alignRight = !this.alignRight
-//     },
-//     toggleDatepickers() {
-//       this.showDatepickers = !this.showDatepickers
-//     },
-//     toggleTrigger() {
-//       this.trigger = !this.trigger
-//     },
-//     applyMethod() {
-//       console.log('apply')
-//     },
-//     openedMethod() {
-//       console.log('opened')
-//     },
-//     closedMethod() {
-//       console.log('closed')
-//       this.trigger = false
-//     },
-//     cancelledMethod() {
-//       console.log('cancelled')
-//     },
-//     changeMonthMethod(visibleMonths) {
-//       console.log('change months', visibleMonths)
-//     },
-//   },
-// }
+const disabledDates = $computed(() => ['2018-12-30', '2018-12-10', '2018-12-14'])
+
+onBeforeMount(() => {
+  setTimeout(() => {
+    inputDateOne = '2019-01-12'
+    inputDateTwo = ''
+  }, 5000)
+})
+
+function formatDates(dateOne: any, dateTwo?: any) {
+  let formattedDates = ''
+
+  if (dateOne)
+    formattedDates = format(dateOne, dateFormat)
+
+  if (dateTwo)
+    formattedDates += ` - ${format(dateTwo, dateFormat)}`
+
+  return formattedDates
+}
+
+function toggleAlign() {
+  alignRight = !alignRight
+}
+
+function toggleDatepickers() {
+  showDatePickers = !showDatePickers
+}
+
+function toggleTrigger() {
+  trigger = !trigger
+}
+
+function applyMethod() {
+  // eslint-disable-next-line no-console
+  console.log('apply')
+}
+
+function openedMethod() {
+  // eslint-disable-next-line no-console
+  console.log('opened')
+}
+
+function closedMethod() {
+  // eslint-disable-next-line no-console
+  console.log('closed')
+
+  trigger = false
+}
+
+function cancelledMethod() {
+  // eslint-disable-next-line no-console
+  console.log('cancelled')
+}
+
+function changeMonthMethod(visibleMonths: any) {
+  // eslint-disable-next-line no-console
+  console.log('change months', visibleMonths)
+}
 </script>
 
 <template>
@@ -83,7 +93,7 @@ import { format } from 'date-fns'
         Toggle trigger
       </button>
     </div>
-    <div v-if="showDatepickers">
+    <div v-if="showDatePickers">
       <div class="datepicker-container with-input">
         <h3>Range datepicker with input</h3>
         <div class="datepicker-trigger">
@@ -222,3 +232,55 @@ import { format } from 'date-fns'
     </div>
   </div>
 </template>
+
+<style>
+html,
+body {
+  min-height: 200vh;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  line-height: 18px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  padding: 10px;
+}
+.app .align-right {
+  text-align: right;
+}
+
+h1 {
+  font-size: 1.8em;
+  line-height: 1.5em;
+  text-align: center;
+}
+.datepicker-container {
+  padding: 0 30px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.01);
+  max-width: 600px;
+  margin: 0 auto 30px;
+  border-radius: 12px;
+}
+#datepicker-button-trigger {
+  background: #008489;
+  border: 1px solid #008489;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 200px;
+}
+input {
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.buttons {
+  max-width: 500px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+</style>
