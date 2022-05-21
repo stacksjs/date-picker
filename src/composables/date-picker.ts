@@ -5,13 +5,15 @@ import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMon
 
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed'])
 
-const wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
-const dateFormat = $ref('yyyy-LL-dd')
-const dateLabelFormat = $ref('iiii, LLLL d, yyyy')
-const showDatePicker = $ref(false)
+let dateOne: Date = $ref()
+let dateTwo: Date = $ref()
+let wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
+let dateFormat = $ref('yyyy-LL-dd')
+let dateLabelFormat = $ref('iiii, LLLL d, yyyy')
+let showDatePicker = $ref(false)
 let showKeyboardShortcutsMenu = $ref(false)
 let showMonths = $ref(2)
-const colors = $ref({
+let colors = $ref({
   selected: '#00a699',
   inRange: '#66e2da',
   selectedText: '#fff',
@@ -20,8 +22,8 @@ const colors = $ref({
   disabled: '#fff',
   hoveredInRange: '#67f6ee',
 })
-const sundayFirst = $ref(false)
-const ariaLabels = $ref({
+let sundayFirst = $ref(false)
+let ariaLabels = $ref({
   chooseDate: (date: string) => date,
   chooseStartDate: (date: string) => `Choose ${date} as your start date.`,
   chooseEndDate: (date: string) => `Choose ${date} as your end date.`,
@@ -33,76 +35,15 @@ const ariaLabels = $ref({
   openKeyboardShortcutsMenu: 'Open keyboard shortcuts menu.',
   closeKeyboardShortcutsMenu: 'Close keyboard shortcuts menu',
 })
-
-const monthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-const daysShort = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
-const texts = {
-  apply: 'Apply',
-  cancel: 'Cancel',
-  keyboardShortcuts: 'Keyboard Shortcuts',
-}
-const keyboardShortcuts = [
-  { symbol: '↵', label: 'Select the date in focus', symbolDescription: 'Enter key' },
-  {
-    symbol: '←/→',
-    label: 'Move backward (left) and forward (right) by one day.',
-    symbolDescription: 'Left or right arrow keys',
-  },
-  {
-    symbol: '↑/↓',
-    label: 'Move backward (up) and forward (down) by one week.',
-    symbolDescription: 'Up or down arrow keys',
-  },
-  {
-    symbol: 'PgUp/PgDn',
-    label: 'Switch months.',
-    symbolDescription: 'PageUp and PageDown keys',
-  },
-  {
-    symbol: 'Home/End',
-    label: 'Go to the first or last day of a week.',
-    symbolDescription: 'Home or End keys',
-  },
-  { symbol: 'Esc', label: 'Close this panel', symbolDescription: 'Escape key' },
-  { symbol: '?', label: 'Open this panel', symbolDescription: 'Question mark' },
-]
-const keys = {
-  arrowDown: 40,
-  arrowUp: 38,
-  arrowRight: 39,
-  arrowLeft: 37,
-  enter: 13,
-  pgUp: 33,
-  pgDn: 34,
-  end: 35,
-  home: 36,
-  questionMark: 191,
-  esc: 27,
-}
-
 let startingDate = $ref('')
-const focusedDate = $ref('')
-const months = $ref([])
-const years = $ref([])
-const width = $ref(300)
-const selectedDate1 = $ref('')
+let focusedDate = $ref('')
+let months = $ref([])
+let years = $ref([])
+let width = $ref(300)
+let selectedDate1 = $ref('')
 let selectedDate2 = $ref('')
-const isSelectingDate1 = $ref(true)
-const hoverDate = $ref('')
+let isSelectingDate1 = $ref(true)
+let hoverDate = $ref('')
 let alignRight = $ref(false)
 let triggerPosition = $ref({
   height: 0,
@@ -174,8 +115,6 @@ const hasMinDate = $computed(() => !!(minDate && minDate !== ''))
 const isRangeMode = $computed(() => mode === 'range')
 const isSingleMode = $computed(() => mode === 'single')
 const datePickerWidth = $computed(() => width * showMonths)
-const dateOne: Date = $ref()
-const dateTwo: Date = $ref()
 const datePropsCompound = $computed(() => `${dateOne.toString} ${dateTwo.toString}`) // used to watch for changes in props, and update GUI accordingly
 const isDateTwoBeforeDateOne = $computed(() => {
   if (!dateTwo)
@@ -191,6 +130,67 @@ const visibleMonths = $computed(() => {
 
   return numberOfMonthsArray.map((_, index) => firstMonthArray[index].firstDateOfMonth)
 })
+
+// static variables
+const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const daysShort = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
+const texts = {
+  apply: 'Apply',
+  cancel: 'Cancel',
+  keyboardShortcuts: 'Keyboard Shortcuts',
+}
+const keyboardShortcuts = [
+  { symbol: '↵', label: 'Select the date in focus', symbolDescription: 'Enter key' },
+  {
+    symbol: '←/→',
+    label: 'Move backward (left) and forward (right) by one day.',
+    symbolDescription: 'Left or right arrow keys',
+  },
+  {
+    symbol: '↑/↓',
+    label: 'Move backward (up) and forward (down) by one week.',
+    symbolDescription: 'Up or down arrow keys',
+  },
+  {
+    symbol: 'PgUp/PgDn',
+    label: 'Switch months.',
+    symbolDescription: 'PageUp and PageDown keys',
+  },
+  {
+    symbol: 'Home/End',
+    label: 'Go to the first or last day of a week.',
+    symbolDescription: 'Home or End keys',
+  },
+  { symbol: 'Esc', label: 'Close this panel', symbolDescription: 'Escape key' },
+  { symbol: '?', label: 'Open this panel', symbolDescription: 'Question mark' },
+]
+const keys = {
+  arrowDown: 40,
+  arrowUp: 38,
+  arrowRight: 39,
+  arrowLeft: 37,
+  enter: 13,
+  pgUp: 33,
+  pgDn: 34,
+  end: 35,
+  home: 36,
+  questionMark: 191,
+  esc: 27,
+}
 
 watch(selectedDate1, (newValue, oldValue) => {
   const newDate = !newValue || newValue === '' ? '' : format(newValue, dateFormat)
@@ -521,9 +521,11 @@ function isMonthDisabled(year, monthIndex) {
 
 function generateMonths() {
   months = []
+
   let currentMonth = startingDate
+
   for (let i = 0; i < showMonths + 2; i++) {
-    months.push(getMonth(currentMonth))
+    months.push(getMonthOf(currentMonth))
     currentMonth = addMonths(currentMonth)
   }
 }
@@ -539,7 +541,7 @@ function generateYears() {
     years.push(year.toString())
 }
 
-function setupDatepicker() {
+function setupDatePicker() {
   if ($options.ariaLabels)
     ariaLabels = copyObject($options.ariaLabels)
 
@@ -596,7 +598,7 @@ function setSundayToFirstDayInWeek() {
   daysShort.unshift(lastDayShort)
 }
 
-function getMonth(date: any) {
+function getMonthOf(date: any) {
   const firstDateOfMonth = format(date, 'YYYY-MM-01')
   const year = format(date, 'YYYY')
   const monthNumber = parseInt(format(date, 'M'))

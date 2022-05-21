@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDatePicker } from '~/composables/date-picker'
+
 const {
   triggerElementId,
   dateOne,
@@ -46,4 +48,6 @@ const {
   trigger: boolean
   closeAfterSelect: boolean
 }>()
+
+const { dateFormat } = useDatePicker()
 </script>
