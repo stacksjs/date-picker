@@ -504,7 +504,7 @@ function handleKeyboardInput(event: any) {
   }
 
   else if (shouldHandleInput(event, keys.pgDn)) {
-    setFocusedDate(addManyMonths(focusedDate, 1))
+    setFocusedDate(addManyMonths(focusedDate))
     nextMonth()
   }
 
@@ -567,23 +567,22 @@ function setDateFromText(value: any) {
   if (!isValid(valueAsDateObject))
     return
 
-  const formattedDate = format(valueAsDateObject, dateFormat)
-
   if (
-    isDateDisabled(formattedDate)
-        || isBeforeMinDate(formattedDate)
-        || isAfterEndDate(formattedDate)
+    isDateDisabled(valueAsDateObject)
+        || isBeforeMinDate(valueAsDateObject)
+        || isAfterEndDate(valueAsDateObject)
   )
     return
 
-  startingDate = subMonths(formattedDate, 1)
+  startingDate = subMonths(valueAsDateObject, 1)
+
   generateMonths()
   generateYears()
-  selectDate(formattedDate)
+  selectDate(valueAsDateObject)
 }
 
-function isMonthDisabled(year, monthIndex) {
-  const monthDate = new Date(year, monthIndex)
+function isMonthDisabled(year: number, month: number) {
+  const monthDate = new Date(year, month)
   if (hasMinDate && isBefore(monthDate, startOfMonth(minDate)))
     return true
 
@@ -672,11 +671,12 @@ function setSundayToFirstDayInWeek() {
   daysShort.unshift(lastDayShort)
 }
 
-function getMonthOf(date: any) {
+function getMonthOf(date: Date) {
   const firstDateOfMonth = format(date, 'YYYY-MM-01')
   const year = format(date, 'YYYY')
   const monthNumber = parseInt(format(date, 'M'))
   const monthName = monthNames[monthNumber - 1]
+
   return {
     year,
     firstDateOfMonth,
@@ -691,12 +691,15 @@ function getWeeks(date: Date) {
   const daysInMonth = getDaysInMonth(date)
   const year = format(date, 'yyyy')
   const month = format(date, 'MM')
+
   let firstDayInWeek = parseInt(format(date, sundayFirst ? 'd' : 'E'))
-  if (sundayFirst) {
+
+  if (sundayFirst)
     firstDayInWeek++
-  }
+
   const weeks = []
   let week = []
+
   // add empty days to get first day in correct position
   for (let s = 1; s < firstDayInWeek; s++)
     week.push(weekDayNotInMonth)
@@ -705,15 +708,18 @@ function getWeeks(date: Date) {
     const isLastDayInMonth = d >= daysInMonth - 1
     const dayNumber = d + 1
     const dayNumberFull = dayNumber < 10 ? `0${dayNumber}` : dayNumber
+
     week.push({
       dayNumber,
       dayNumberFull,
       fullDate: `${year}-${month}-${dayNumberFull}`,
     })
+
     if (week.length === 7) {
       weeks.push(week)
       week = []
     }
+
     else if (isLastDayInMonth) {
       for (let i = 0; i < 7 - week.length; i++)
         week.push(weekDayNotInMonth)
@@ -722,6 +728,7 @@ function getWeeks(date: Date) {
       week = []
     }
   }
+
   return weeks
 }
 
@@ -1054,5 +1061,6 @@ export function useDatePicker(
     handleClickOutside,
     trapKeyboardInput,
     handleKeyboardInput,
+    isMonthDisabled,
   }
 }
