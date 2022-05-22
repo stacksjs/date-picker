@@ -74,11 +74,12 @@ let triggerPosition = $ref({
   left: 0,
   right: 0,
 })
-const triggerWrapperPosition = $ref({
+let triggerWrapperPosition = $ref({
   left: 0,
   right: 0,
 })
-let viewportWidth = $ref('')
+let viewportWidth = $ref(0) // number 720
+let viewportWidthPx = $ref('') // string 720px
 let isMobile = $ref(false)
 let isTablet = $ref(false)
 let triggerElement: HTMLElement | null = $ref()
@@ -107,17 +108,17 @@ const wrapperStyles = $computed(() => {
 })
 const innerStyles = $computed(() => {
   return {
-    'margin-left': showFullscreen ? `-${viewportWidth}` : `-${width}px`,
+    'margin-left': showFullscreen ? `-${viewportWidthPx}` : `-${width}px`,
   }
 })
 const keyboardShortcutsMenuStyles = $computed(() => {
   return {
-    left: showFullscreen ? viewportWidth : `${width}px`,
+    left: showFullscreen ? viewportWidthPx : `${width}px`,
   }
 })
 const monthWidthStyles = $computed(() => {
   return {
-    width: showFullscreen ? viewportWidth : `${width}px`,
+    width: showFullscreen ? viewportWidthPx : `${width}px`,
   }
 })
 const mobileHeaderFallback = $computed(() => mode === 'range' ? 'Select dates' : 'Select date')
@@ -281,7 +282,7 @@ const handleWindowResizeEvent = useDebounceFn(() => {
 }, 200)
 
 onMounted(() => {
-  viewportWidth = `${window.innerWidth}px`
+  viewportWidthPx = `${window.innerWidth}px`
   isMobile = window.innerWidth < 768
   isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024
 
@@ -933,7 +934,7 @@ function closeDatePicker() {
 
   showDatePicker = false
   showKeyboardShortcutsMenu = false
-  triggerElement.classList.remove('datepicker-open')
+  triggerElement?.classList.remove('datepicker-open')
 
   emit('closed')
 }
@@ -960,7 +961,8 @@ function apply() {
 function positionDatePicker() {
   const triggerWrapperElement = findAncestor(triggerElement, '.datepicker-trigger')
 
-  triggerPosition = triggerElement?.getBoundingClientRect()
+  if (triggerElement)
+    triggerPosition = triggerElement.getBoundingClientRect()
 
   if (triggerWrapperElement)
     triggerWrapperPosition = triggerWrapperElement.getBoundingClientRect()
@@ -969,7 +971,7 @@ function positionDatePicker() {
     triggerWrapperPosition = { left: 0, right: 0 }
 
   const width = document.documentElement.clientWidth || window.innerWidth
-  viewportWidth = `${width}px`
+  viewportWidthPx = `${width}px`
   isMobile = width < 768
   isTablet = width >= 768 && width <= 1024
   showMonths = isMobile
