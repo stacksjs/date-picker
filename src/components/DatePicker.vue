@@ -1,30 +1,7 @@
 <script setup lang="ts">
 import { useDatePicker } from '~/composables/date-picker'
 
-const {
-  triggerElementId,
-  dateOne,
-  dateTwo,
-  minDate,
-  endDate,
-  mode = 'range',
-  offsetX = 0,
-  offsetY = 0,
-  monthsToShow = 2,
-  startOpen,
-  fullscreenMobile,
-  inline,
-  mobileHeader,
-  disabledDates = [],
-  enabledDates = [],
-  customizedDates = { dates: [], cssClass: '' },
-  showActionButtons = true,
-  showShortcutsMenuTrigger = true,
-  showMonthYearSelect = true,
-  yearsForSelect = true,
-  trigger = false,
-  closeAfterSelect = false,
-} = defineProps<{
+interface Props {
   triggerElementId: string
   dateOne: Date
   dateTwo: Date
@@ -50,7 +27,32 @@ const {
   yearsForSelect: number
   trigger: boolean
   closeAfterSelect: boolean
-}>()
+}
+
+const {
+  triggerElementId,
+  dateOne,
+  dateTwo,
+  minDate,
+  endDate,
+  mode = 'range',
+  offsetX = 0,
+  offsetY = 0,
+  monthsToShow = 2,
+  startOpen,
+  fullscreenMobile,
+  inline,
+  mobileHeader,
+  disabledDates,
+  enabledDates,
+  customizedDates = { dates: [], cssClass: '' },
+  showActionButtons = true,
+  showShortcutsMenuTrigger = true,
+  showMonthYearSelect = true,
+  yearsForSelect = true,
+  trigger = false,
+  closeAfterSelect = false,
+} = defineProps<Props>()
 
 const { dateFormat } = useDatePicker(
   triggerElementId,
