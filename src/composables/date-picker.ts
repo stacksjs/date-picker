@@ -6,29 +6,29 @@ import { findAncestor } from '~/helpers'
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed', 'opened', 'previous-month', 'next-month', 'cancelled'])
 
 // reactive variables whose initial state may be provided through props
-const triggerElementId = $ref('')
-const dateOne: Date = $ref()
-const dateTwo: Date = $ref()
-const minDate: Date = $ref()
-const endDate: Date = $ref()
-const mode = $ref('range')
-const offsetX = $ref(0)
-const offsetY = $ref(0)
-const monthsToShow = $ref(2)
-const startOpen = $ref(false)
-const inline = $ref()
+let triggerElementId = $ref('')
+let dateOne: Date = $ref()
+let dateTwo: Date = $ref()
+let minDate: Date = $ref()
+let endDate: Date = $ref()
+let mode = $ref('range')
+let offsetX = $ref(0)
+let offsetY = $ref(0)
+let monthsToShow = $ref(2)
+let startOpen = $ref(false)
+let inline = $ref()
 // let mobileHeader = $ref('')
-const enabledDates = $ref([])
-const disabledDates = $ref([])
-const customizedDates = $ref([])
-const fullscreenMobile = $ref()
-const showActionButtons = $ref(true)
+let enabledDates = $ref([])
+let disabledDates = $ref([])
+let customizedDates = $ref([])
+let fullscreenMobile = $ref()
+let showActionButtons = $ref(true)
 // let showShortcutsMenuTrigger = $ref(true)
-const showMonthYearSelect = $ref(false)
-const yearsForSelect = $ref(10)
+let showMonthYearSelect = $ref(false)
+let yearsForSelect = $ref(10)
 const isTest = $ref(process.env.NODE_ENV === 'test')
-const trigger = $ref(false)
-const closeAfterSelect = $ref(false)
+let trigger = $ref(false)
+let closeAfterSelect = $ref(false)
 
 const wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
 const dateFormat = $ref('yyyy-LL-dd')
@@ -849,7 +849,7 @@ function previousMonth() {
 }
 
 function nextMonth() {
-  startingDate = new Date(addMonths(months[months.length - 1].firstDateOfMonth))
+  startingDate = new Date(addManyMonths(months[months.length - 1].firstDateOfMonth))
 
   months.push(getMonth(startingDate))
   months.splice(0, 1)
@@ -884,10 +884,12 @@ function updateMonth(offset: number, year: number, event: any) {
   generateMonths()
 }
 
-function updateYear(offset, monthIdx, event) {
+function updateYear(offset: number, monthIdx: number, event: any) {
   const newYear = event.target.value
-  const newDate = setYear(setMonth(startingDate, monthIdx), newYear)
+  const newDate = setYear(setMonth(startingDate as Date, monthIdx), newYear)
+
   startingDate = subMonths(newDate, offset)
+
   generateMonths()
 }
 
@@ -932,9 +934,10 @@ function closeDatePicker() {
 function openKeyboardShortcutsMenu() {
   showKeyboardShortcutsMenu = true
 
-  const shortcutMenuCloseBtn = $refs['keyboard-shortcus-menu-close']
+  // TODO: implement this
+  // const shortcutMenuCloseBtn = $refs['keyboard-shortcus-menu-close']
 
-  nextTick(() => shortcutMenuCloseBtn.focus())
+  // nextTick(() => shortcutMenuCloseBtn.focus())
 }
 
 function closeKeyboardShortcutsMenu() {
@@ -967,6 +970,7 @@ function positionDatePicker() {
     : isTablet && monthsToShow > 2
       ? 2
       : monthsToShow
+
   nextTick(() => {
     const datepickerWrapper = document.getElementById(wrapperId)
     if (!triggerElement || !datepickerWrapper)
@@ -978,6 +982,31 @@ function positionDatePicker() {
 
     alignRight = rightPosition > viewportWidth
   })
+}
+
+function setupData(options: any) {
+  triggerElementId = options.triggerElementId
+  dateOne = options.dateOne
+  dateTwo = options.dateTwo
+  minDate = options.minDate
+  endDate = options.endDate
+  mode = options.mode
+  offsetY = options.offsetY
+  offsetX = options.offsetX
+  monthsToShow = options.monthsToShow
+  startOpen = options.startOpen
+  fullscreenMobile = options.fullscreenMobile
+  inline = options.inline
+  mobileHeader = options.mobileHeader
+  disabledDates = options.disabledDates
+  enabledDates = options.enabledDates
+  customizedDates = options.customizedDates
+  showActionButtons = options.showActionButtons
+  showShortcutsMenuTrigger = options.showShortcutsMenuTrigger
+  showMonthYearSelect = options.showMonthYearSelect
+  yearsForSelect = options.yearsForSelect
+  trigger = options.trigger
+  closeAfterSelect = options.closeAfterSelect
 }
 
 export function useDatePicker(
@@ -1004,28 +1033,32 @@ export function useDatePicker(
   trigger: string,
   closeAfterSelect: boolean,
 ) {
-  triggerElementId = triggerElementId
-  dateOne = dateOne
-  dateTwo = dateTwo
-  minDate = minDate
-  endDate = endDate
-  mode = mode
-  offsetY = offsetY
-  offsetX = offsetX
-  monthsToShow = monthsToShow
-  startOpen = startOpen
-  fullscreenMobile = fullscreenMobile
-  inline = inline
-  mobileHeader = mobileHeader
-  disabledDates = disabledDates
-  enabledDates = enabledDates
-  customizedDates = customizedDates
-  showActionButtons = showActionButtons
-  showShortcutsMenuTrigger = showShortcutsMenuTrigger
-  showMonthYearSelect = showMonthYearSelect
-  yearsForSelect = yearsForSelect
-  trigger = trigger
-  closeAfterSelect = closeAfterSelect
+  const options = {
+    triggerElementId,
+    dateOne,
+    dateTwo,
+    minDate,
+    endDate,
+    mode,
+    offsetY,
+    offsetX,
+    monthsToShow,
+    startOpen,
+    fullscreenMobile,
+    inline,
+    mobileHeader,
+    disabledDates,
+    enabledDates,
+    customizedDates,
+    showActionButtons,
+    showShortcutsMenuTrigger,
+    showMonthYearSelect,
+    yearsForSelect,
+    trigger,
+    closeAfterSelect,
+  }
+
+  setupData(options)
 
   return {
     dateFormat,
@@ -1053,5 +1086,6 @@ export function useDatePicker(
     apply,
     customizedDateClass,
     updateMonth,
+    updateYear,
   }
 }
