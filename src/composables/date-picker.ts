@@ -259,7 +259,7 @@ watch(datePropsCompound, () => {
 watch(trigger, (newValue) => {
   if (newValue) {
     setTimeout(() => {
-      openDatepicker()
+      openDatePicker()
     }, 0)
   }
 })
@@ -290,7 +290,7 @@ onMounted(() => {
   generateYears()
 
   if (startOpen || inline)
-    openDatepicker()
+    openDatePicker()
 
   // $el.addEventListener('keyup', handleKeyboardInput)
   // $el.addEventListener('keydown', trapKeyboardInput)
@@ -838,17 +838,22 @@ function isDisabled(date: Date) {
 }
 
 function previousMonth() {
-  startingDate = subtractMonths(months[0].firstDateOfMonth)
+  startingDate = new Date(subtractMonths(months[0].firstDateOfMonth))
+
   months.unshift(getMonth(startingDate))
   months.splice(months.length - 1, 1)
+
   emit('previous-month', visibleMonths)
+
   resetFocusedDate(false)
 }
 
 function nextMonth() {
-  startingDate = addMonths(months[months.length - 1].firstDateOfMonth)
+  startingDate = new Date(addMonths(months[months.length - 1].firstDateOfMonth))
+
   months.push(getMonth(startingDate))
   months.splice(0, 1)
+
   emit('next-month', visibleMonths)
   resetFocusedDate(true)
 }
@@ -866,14 +871,16 @@ function toggleDatepicker() {
     closeDatePicker()
 
   else
-    openDatepicker()
+    openDatePicker()
 }
 
-function updateMonth(offset, year, event) {
+function updateMonth(offset: number, year: number, event: any) {
   const newMonth = event.target.value
   const monthIdx = monthNames.indexOf(newMonth)
-  const newDate = setYear(setMonth(startingDate, monthIdx), year)
+  const newDate = setYear(setMonth(startingDate as Date, monthIdx), year)
+
   startingDate = subMonths(newDate, offset)
+
   generateMonths()
 }
 
@@ -884,15 +891,17 @@ function updateYear(offset, monthIdx, event) {
   generateMonths()
 }
 
-function openDatepicker() {
+function openDatePicker() {
   positionDatePicker()
   setStartDates()
   triggerElement.classList.add('datepicker-open')
   showDatePicker = true
   initialDate1 = dateOne
   initialDate2 = dateTwo
+
   emit('opened')
-  $nextTick(() => {
+
+  nextTick(() => {
     if (!inline)
       setFocusedDate(focusedDate)
   })
@@ -902,7 +911,9 @@ function closeDatePickerCancel() {
   if (showDatePicker) {
     selectedDate1 = initialDate1
     selectedDate2 = initialDate2
+
     emit('cancelled')
+
     closeDatePicker()
   }
 }
@@ -914,13 +925,16 @@ function closeDatePicker() {
   showDatePicker = false
   showKeyboardShortcutsMenu = false
   triggerElement.classList.remove('datepicker-open')
+
   emit('closed')
 }
 
 function openKeyboardShortcutsMenu() {
   showKeyboardShortcutsMenu = true
+
   const shortcutMenuCloseBtn = $refs['keyboard-shortcus-menu-close']
-  $nextTick(() => shortcutMenuCloseBtn.focus())
+
+  nextTick(() => shortcutMenuCloseBtn.focus())
 }
 
 function closeKeyboardShortcutsMenu() {
@@ -1038,5 +1052,6 @@ export function useDatePicker(
     isSameDate,
     apply,
     customizedDateClass,
+    updateMonth,
   }
 }
