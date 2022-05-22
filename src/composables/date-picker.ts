@@ -32,7 +32,7 @@ const closeAfterSelect = $ref(false)
 
 const wrapperId = $ref(`datepicker-wrapper-${randomString(5)}`)
 const dateFormat = $ref('yyyy-LL-dd')
-let dateLabelFormat = $ref('iiii, LLLL d, yyyy')
+const dateLabelFormat = $ref('iiii, LLLL d, yyyy')
 let showDatePicker = $ref(false)
 let showKeyboardShortcutsMenu = $ref(false)
 let showMonths = $ref(2)
@@ -45,8 +45,8 @@ const colors = $ref({
   disabled: '#fff',
   hoveredInRange: '#67f6ee',
 })
-let sundayFirst = $ref(false)
-let ariaLabels = $ref({
+const sundayFirst = $ref(false)
+const ariaLabels = $ref({
   chooseDate: (date: string) => date,
   chooseStartDate: (date: string) => `Choose ${date} as your start date.`,
   chooseEndDate: (date: string) => `Choose ${date} as your end date.`,
@@ -61,7 +61,7 @@ let ariaLabels = $ref({
 let startingDate: Date | null = $ref()
 let focusedDate: Date | null = $ref()
 let months = $ref([])
-let years = $ref([])
+const years = $ref([])
 const width = $ref(300)
 let selectedDate1: Date | null = $ref()
 let selectedDate2: Date | null = $ref()
@@ -265,14 +265,12 @@ watch(trigger, (newValue) => {
 })
 
 onBeforeMount(() => {
-  setupDatePicker()
-
   if (sundayFirst)
     setSundayToFirstDayInWeek()
 })
 
 const handleWindowResizeEvent = useDebounceFn(() => {
-  positionDatepicker()
+  positionDatePicker()
   setStartDates()
 }, 200)
 
@@ -333,10 +331,6 @@ function randomString(length: number) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
 
   return text
-}
-
-function copyObject(obj: any) {
-  return JSON.parse(JSON.stringify(obj))
 }
 
 function isSelected(date: any) {
@@ -595,8 +589,14 @@ function generateMonths() {
   let currentMonth = startingDate
 
   for (let i = 0; i < showMonths + 2; i++) {
-    months.push(getMonthOf(currentMonth))
-    currentMonth = addMonths(currentMonth)
+    if (!currentMonth)
+      return
+
+    const month = getMonthOf(currentMonth)
+
+    months.push(month)
+
+    currentMonth = new Date(addManyMonths(currentMonth))
   }
 }
 
@@ -604,53 +604,12 @@ function generateYears() {
   if (!showMonthYearSelect)
     return
 
-  const currentYear = getYear(startingDate)
+  const currentYear = getYear(startingDate as Date)
   const startYear = minDate ? getYear(minDate) : currentYear - yearsForSelect
   const endYear = endDate ? getYear(endDate) : currentYear + yearsForSelect
 
-  years = []
-
   for (let year = startYear; year <= endYear; year++)
-    years.push(year.toString())
-}
-
-function setupDatePicker() {
-  if ($options.ariaLabels)
-    ariaLabels = copyObject($options.ariaLabels)
-
-  if ($options.keyboardShortcuts)
-    keyboardShortcuts = copyObject($options.keyboardShortcuts)
-
-  if ($options.dateLabelFormat)
-    dateLabelFormat = copyObject($options.dateLabelFormat)
-
-  if ($options.sundayFirst)
-    sundayFirst = copyObject($options.sundayFirst)
-
-  if ($options.colors) {
-    const colors = copyObject($options.colors)
-    colors.selected = colors.selected || colors.selected
-    colors.inRange = colors.inRange || colors.inRange
-    colors.hoveredInRange = colors.hoveredInRange || colors.hoveredInRange
-    colors.selectedText = colors.selectedText || colors.selectedText
-    colors.text = colors.text || colors.text
-    colors.inRangeBorder = colors.inRangeBorder || colors.inRangeBorder
-    colors.disabled = colors.disabled || colors.disabled
-  }
-  if ($options.monthNames && $options.monthNames.length === 12)
-    monthNames = copyObject($options.monthNames)
-
-  if ($options.days && $options.days.length === 7)
-    days = copyObject($options.days)
-
-  if ($options.daysShort && $options.daysShort.length === 7)
-    daysShort = copyObject($options.daysShort)
-
-  if ($options.texts) {
-    const texts = copyObject($options.texts)
-    texts.apply = texts.apply || texts.apply
-    texts.cancel = texts.cancel || texts.cancel
-  }
+    years.push(year)
 }
 
 function setStartDates() {
@@ -666,13 +625,19 @@ function setStartDates() {
 
 function setSundayToFirstDayInWeek() {
   const lastDay = days.pop()
-  days.unshift(lastDay)
+
+  if (lastDay)
+    days.unshift(lastDay)
+
   const lastDayShort = daysShort.pop()
-  daysShort.unshift(lastDayShort)
+
+  if (lastDayShort)
+    daysShort.unshift(lastDayShort)
 }
 
 function getMonthOf(date: Date) {
   const firstDateOfMonth = format(date, 'YYYY-MM-01')
+  const d = new Date(firstDateOfMonth)
   const year = format(date, 'YYYY')
   const monthNumber = parseInt(format(date, 'M'))
   const monthName = monthNames[monthNumber - 1]
@@ -682,7 +647,7 @@ function getMonthOf(date: Date) {
     firstDateOfMonth,
     monthName,
     monthNumber,
-    weeks: getWeeks(firstDateOfMonth),
+    weeks: getWeeks(d),
   }
 }
 
@@ -798,12 +763,12 @@ function isSameDate(date1: any, date2: any) {
 }
 
 function isInRange(date: any) {
-  if (!allDatesSelected || isSingleMode)
+  if (isSingleMode || allDatesSelected)
     return false
 
   return (
-    (isAfter(date, selectedDate1) && isBefore(date, selectedDate2))
-        || (isAfter(date, selectedDate1)
+    (isAfter(date, selectedDate1 as Date) && isBefore(date, selectedDate1 as Date))
+        || (isAfter(date, selectedDate1 as Date)
           && isBefore(date, hoverDate)
           && !allDatesSelected)
   )
@@ -914,7 +879,7 @@ function updateYear(offset, monthIdx, event) {
 }
 
 function openDatepicker() {
-  positionDatepicker()
+  positionDatePicker()
   setStartDates()
   triggerElement.classList.add('datepicker-open')
   showDatePicker = true
@@ -962,7 +927,7 @@ function apply() {
   closeDatepicker()
 }
 
-function positionDatepicker() {
+function positionDatePicker() {
   const triggerWrapperElement = findAncestor(triggerElement, '.datepicker-trigger')
 
   triggerPosition = triggerElement.getBoundingClientRect()
@@ -1062,5 +1027,10 @@ export function useDatePicker(
     trapKeyboardInput,
     handleKeyboardInput,
     isMonthDisabled,
+    setHoverDate,
+    isToday,
+    isSameDate,
+    apply,
+    customizedDateClass,
   }
 }
