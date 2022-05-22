@@ -3,21 +3,19 @@ import { format } from 'date-fns'
 import { DatePicker } from '~/index'
 import { useDatePicker } from '~/composables/date-picker'
 
-useDatePicker({
-  format: 'yyyy-MM-dd',
-  value: format(new Date(), 'yyyy-MM-dd'),
-})
+let dateOne: Date = $ref()
+const dateTwo: Date = $ref()
 
 const { dateFormat } = useDatePicker(
   'datepicker-input-single-trigger',
-  inputDateOne,
+  dateOne,
 )
 
 // const disabledDates = $computed(() => [new Date('2018-12-30'), new Date('2018-12-10'), new Date('2018-12-14')])
 
 onBeforeMount(() => {
   setTimeout(() => {
-    inputDateOne = new Date('2019-01-12')
+    dateOne = new Date('2019-01-12')
   }, 5000)
 })
 
