@@ -18,12 +18,6 @@ let alignRight = $ref(false)
 let showDatePickers = $ref(true)
 let trigger = $ref(false)
 
-const options = {
-  triggerElementId: 'datepicker-input-single-trigger',
-  inputDateOne,
-
-}
-
 const { dateFormat } = useDatePicker(
   'datepicker-input-single-trigger',
   inputDateOne,
