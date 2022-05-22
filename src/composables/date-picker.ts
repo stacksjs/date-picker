@@ -1,7 +1,7 @@
 import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMonth, getYear, isAfter, isBefore, isSameDay, isSameMonth, isValid, lastDayOfMonth, setMonth, setYear, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from 'date-fns'
 
 // import ResizeSelect from '../directives/ResizeSelect'
-// import { copyObject, findAncestor } from './../helpers'
+import { findAncestor } from '~/helpers'
 
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed', 'opened', 'previous-month', 'next-month', 'cancelled'])
 
@@ -950,7 +950,7 @@ function apply() {
 function positionDatePicker() {
   const triggerWrapperElement = findAncestor(triggerElement, '.datepicker-trigger')
 
-  triggerPosition = triggerElement.getBoundingClientRect()
+  triggerPosition = triggerElement?.getBoundingClientRect()
 
   if (triggerWrapperElement)
     triggerWrapperPosition = triggerWrapperElement.getBoundingClientRect()
