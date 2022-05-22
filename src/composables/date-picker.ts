@@ -1,6 +1,5 @@
 import { addDays, addMonths, addWeeks, endOfWeek, format, getDaysInMonth, getMonth, getYear, isAfter, isBefore, isSameDay, isSameMonth, isValid, lastDayOfMonth, setMonth, setYear, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from 'date-fns'
 
-// import ResizeSelect from '../directives/ResizeSelect'
 import { findAncestor } from '~/helpers'
 
 const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed', 'opened', 'previous-month', 'next-month', 'cancelled'])
@@ -60,7 +59,7 @@ const ariaLabels = $ref({
 })
 let startingDate: Date | null = $ref()
 let focusedDate: Date | null = $ref()
-let months = $ref([])
+let months: string[] = $ref([])
 const years = $ref([])
 const width = $ref(300)
 let selectedDate1: Date | null = $ref()
@@ -134,12 +133,13 @@ const isDateTwoBeforeDateOne = $computed(() => {
   return isBefore(dateTwo, dateOne)
 })
 const visibleMonths = $computed(() => {
-  const firstMonthArray = months.filter((m, index) => index > 0)
+  const firstMonthArray: object[] = months.filter((m, index: number) => index > 0)
   const numberOfMonthsArray = []
+
   for (let i = 0; i < showMonths; i++)
     numberOfMonthsArray.push(i)
 
-  return numberOfMonthsArray.map((_, index) => firstMonthArray[index].firstDateOfMonth)
+  return numberOfMonthsArray.map((_, index: number) => firstMonthArray[index].firstDateOfMonth)
 })
 
 // static variables
