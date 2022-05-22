@@ -54,7 +54,7 @@ const ariaLabels = $ref({
   unavailableDate: (date: string) => `Not available. ${date}`,
   previousMonth: 'Move backward to switch to the previous month.',
   nextMonth: 'Move forward to switch to the next month.',
-  closeDatepicker: 'Close calendar',
+  closeDatePicker: 'Close calendar',
   openKeyboardShortcutsMenu: 'Open keyboard shortcuts menu.',
   closeKeyboardShortcutsMenu: 'Close keyboard shortcuts menu',
 })
@@ -395,7 +395,7 @@ function handleClickOutside(event: any) {
   if (event.target.id === triggerElementId || !showDatePicker || inline)
     return
 
-  closeDatepicker()
+  closeDatePicker()
 }
 
 function shouldHandleInput(event: any, key: any) {
@@ -427,7 +427,7 @@ function handleKeyboardInput(event: any) {
       closeKeyboardShortcutsMenu()
 
     else
-      closeDatepicker()
+      closeDatePicker()
   }
 
   else if (showKeyboardShortcutsMenu) {
@@ -617,7 +617,7 @@ function setStartDates() {
   if (hasMinDate && isBefore(startDate, minDate))
     startDate = minDate
 
-  startingDate = subtractMonths(startDate)
+  startingDate = new Date(subtractMonths(startDate))
   selectedDate1 = dateOne
   selectedDate2 = dateTwo
   focusedDate = startDate
@@ -703,27 +703,31 @@ function selectDate(date: any) {
 
   if (mode === 'single') {
     selectedDate1 = date
-    closeDatepicker()
+    closeDatePicker()
     return
   }
-  if (isSelectingDate1 || isBefore(date, selectedDate1)) {
+
+  if (isSelectingDate1 || isBefore(date, selectedDate1 as Date)) {
     selectedDate1 = date
     isSelectingDate1 = false
-    if (isBefore(selectedDate2, date))
-      selectedDate2 = ''
+
+    if (isBefore(selectedDate2 as Date, date))
+      selectedDate2 = null
   }
+
   else {
     selectedDate2 = date
     isSelectingDate1 = true
-    if (isAfter(selectedDate1, date)) {
-      selectedDate1 = ''
-    }
+
+    if (isAfter(selectedDate1 as Date, date)) { selectedDate1 = null }
+
     else if (showActionButtons) {
       // if user has selected both dates, focus the apply button for accessibility
-      $refs['apply-button'].focus()
+      // TODO: $refs['apply-button'].focus()
     }
+
     if (allDatesSelected && closeAfterSelect)
-      closeDatepicker()
+      closeDatePicker()
   }
 }
 
@@ -733,14 +737,15 @@ function setHoverDate(date: any) {
 
 function setFocusedDate(date: any) {
   const formattedDate = format(date, dateFormat)
-  focusedDate = formattedDate
-  const dateElement = $refs[`date-${formattedDate}`]
-  // handle .focus() on ie11 by adding a short timeout
-  if (dateElement && dateElement.length) {
-    setTimeout(() => {
-      dateElement[0].focus()
-    }, 10)
-  }
+  focusedDate = new Date(formattedDate)
+
+  // TODO: const dateElement = $refs[`date-${formattedDate}`]
+  // // handle .focus() on ie11 by adding a short timeout
+  // if (dateElement && dateElement.length) {
+  //   setTimeout(() => {
+  //     dateElement[0].focus()
+  //   }, 10)
+  // }
 }
 
 function resetFocusedDate(setToFirst: any) {
@@ -750,7 +755,8 @@ function resetFocusedDate(setToFirst: any) {
     const monthIdx = getMonth(targetMonth)
     const year = getYear(targetMonth)
     const newFocusedDate = setYear(setMonth(focusedDate, monthIdx), year)
-    focusedDate = format(newFocusedDate, dateFormat)
+
+    focusedDate = new Date(format(newFocusedDate, dateFormat))
   }
 }
 
@@ -857,7 +863,7 @@ function addManyMonths(date: any) {
 
 function toggleDatepicker() {
   if (showDatePicker)
-    closeDatepicker()
+    closeDatePicker()
 
   else
     openDatepicker()
@@ -897,11 +903,11 @@ function closeDatePickerCancel() {
     selectedDate1 = initialDate1
     selectedDate2 = initialDate2
     emit('cancelled')
-    closeDatepicker()
+    closeDatePicker()
   }
 }
 
-function closeDatepicker() {
+function closeDatePicker() {
   if (inline)
     return
 
@@ -924,7 +930,7 @@ function closeKeyboardShortcutsMenu() {
 
 function apply() {
   emit('apply')
-  closeDatepicker()
+  closeDatePicker()
 }
 
 function positionDatePicker() {
