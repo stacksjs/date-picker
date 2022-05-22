@@ -945,7 +945,7 @@ function openKeyboardShortcutsMenu() {
   showKeyboardShortcutsMenu = true
 
   // TODO: implement this
-  // const shortcutMenuCloseBtn = $refs['keyboard-shortcus-menu-close']
+  // const shortcutMenuCloseBtn = $refs['keyboard-shortcuts-menu-close']
 
   // nextTick(() => shortcutMenuCloseBtn.focus())
 }
@@ -1036,7 +1036,7 @@ export function useDatePicker(
   mobileHeader?: string,
   disabledDates?: Date[],
   enabledDates?: Date[],
-  customizedDates?: [],
+  customizedDates?: { dates: Date[]; cssClass: string },
   showActionButtons?: boolean,
   showShortcutsMenuTrigger?: boolean,
   showMonthYearSelect?: boolean,
