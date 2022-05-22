@@ -8,6 +8,8 @@ const emit = defineEmits(['dateOneSelected', 'dateTwoSelected', 'apply', 'closed
 let triggerElementId = $ref('')
 let dateOne: Date = $ref()
 let dateTwo: Date = $ref()
+let initialDate1: Date = $ref()
+let initialDate2: Date = $ref()
 let minDate: Date = $ref()
 let endDate: Date = $ref()
 let mode = $ref('range')
@@ -59,7 +61,7 @@ const ariaLabels = $ref({
 })
 let startingDate: Date | null = $ref()
 let focusedDate: Date | null = $ref()
-let months: string[] = $ref([])
+let months: any[] = $ref([])
 const years = $ref([])
 const width = $ref(300)
 let selectedDate1: Date | null = $ref()
@@ -133,7 +135,11 @@ const isDateTwoBeforeDateOne = $computed(() => {
   return isBefore(dateTwo, dateOne)
 })
 const visibleMonths = $computed(() => {
-  const firstMonthArray: object[] = months.filter((m, index: number) => index > 0)
+  interface FirstMonth {
+    firstDateOfMonth: string
+  }
+
+  const firstMonthArray: FirstMonth | string[] = months.filter((m, index: number) => index > 0)
   const numberOfMonthsArray = []
 
   for (let i = 0; i < showMonths; i++)
@@ -823,7 +829,7 @@ function isDateDisabled(date: Date) {
 function customizedDateClass(date: Date) {
   let customizedClasses = ''
 
-  if (customizedDates.length > 0) {
+  if (customizedDates.length) {
     for (let i = 0; i < customizedDates.length; i++) {
       if (customizedDates[i].dates.includes(date))
         customizedClasses += ` asd__day--${customizedDates[i].cssClass}`
@@ -896,7 +902,8 @@ function updateYear(offset: number, monthIdx: number, event: any) {
 function openDatePicker() {
   positionDatePicker()
   setStartDates()
-  triggerElement.classList.add('datepicker-open')
+  if (triggerElement)
+    triggerElement.classList.add('datepicker-open')
   showDatePicker = true
   initialDate1 = dateOne
   initialDate2 = dateTwo
@@ -997,12 +1004,12 @@ function setupData(options: any) {
   startOpen = options.startOpen
   fullscreenMobile = options.fullscreenMobile
   inline = options.inline
-  mobileHeader = options.mobileHeader
+  // mobileHeader = options.mobileHeader
   disabledDates = options.disabledDates
   enabledDates = options.enabledDates
   customizedDates = options.customizedDates
   showActionButtons = options.showActionButtons
-  showShortcutsMenuTrigger = options.showShortcutsMenuTrigger
+  // showShortcutsMenuTrigger = options.showShortcutsMenuTrigger
   showMonthYearSelect = options.showMonthYearSelect
   yearsForSelect = options.yearsForSelect
   trigger = options.trigger
