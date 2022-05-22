@@ -62,7 +62,7 @@ const ariaLabels = $ref({
 let startingDate: Date | null = $ref()
 let focusedDate: Date | null = $ref()
 let months: any[] = $ref([])
-const years = $ref([])
+const years: any[] = $ref([])
 const width = $ref(300)
 let selectedDate1: Date | null = $ref()
 let selectedDate2: Date | null = $ref()
@@ -282,9 +282,10 @@ const handleWindowResizeEvent = useDebounceFn(() => {
 }, 200)
 
 onMounted(() => {
-  viewportWidthPx = `${window.innerWidth}px`
-  isMobile = window.innerWidth < 768
-  isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024
+  viewportWidth = window.innerWidth
+  viewportWidthPx = `${viewportWidth}px`
+  isMobile = viewportWidth < 768
+  isTablet = viewportWidth >= 768 && viewportWidth <= 1024
 
   // window.addEventListener('resize', handleWindowResizeEvent)
 
@@ -323,16 +324,17 @@ onUnmounted(() => {
 })
 
 function handleWindowClickEvent(event: any) {
-  if (event.target.id === triggerElementId) {
-    event.stopPropagation()
-    event.preventDefault()
-    toggleDatepicker()
-  }
+  if (event.target.id !== triggerElementId)
+    return
+
+  event.stopPropagation()
+  event.preventDefault()
+  toggleDatepicker()
 }
 
 function randomString(length: number) {
-  let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let text = ''
 
   for (let i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length))
@@ -340,7 +342,7 @@ function randomString(length: number) {
   return text
 }
 
-function isSelected(date: any) {
+function isSelected(date: Date) {
   if (!date)
     return
 
@@ -405,7 +407,7 @@ function handleClickOutside(event: any) {
   closeDatePicker()
 }
 
-function shouldHandleInput(event: any, key: any) {
+function shouldHandleInput(event: any, key: number) {
   return (
     event.keyCode === key && (!event.shiftKey || event.keyCode === 191) && showDatePicker
   )
@@ -555,13 +557,12 @@ function setDateFromText(value: any) {
   const isFormatDayFirst = value.match(
     /^(0[1-9]|1[0-9]|2[0-9]|3[0-1])[.](0[1-9]|1[0-2])[.](\d{4})$/,
   )
+
   if (!isFormatYearFirst && !isFormatDayFirst)
     return
 
-  if (isFormatDayFirst) {
-    // convert to yyyy-MM-dd
+  if (isFormatDayFirst) // then convert to yyyy-MM-dd
     value = `${value.substring(6, 10)}-${value.substring(3, 5)}-${value.substring(0, 2)}`
-  }
 
   const valueAsDateObject = new Date(value)
 
@@ -1021,26 +1022,26 @@ function setupData(options: any) {
 export function useDatePicker(
   triggerElementId: string,
   dateOne: Date,
-  dateTwo: Date,
-  minDate: Date,
-  endDate: Date,
-  mode: string,
-  offsetY: number,
-  offsetX: number,
-  monthsToShow: number,
-  startOpen: boolean,
-  fullscreenMobile: boolean,
-  inline: boolean,
-  mobileHeader: string,
-  disabledDates: Date[],
-  enabledDates: Date[],
-  customizedDates: [],
-  showActionButtons: boolean,
-  showShortcutsMenuTrigger: boolean,
-  showMonthYearSelect: boolean,
-  yearsForSelect: number,
-  trigger: string,
-  closeAfterSelect: boolean,
+  dateTwo?: Date,
+  minDate?: Date,
+  endDate?: Date,
+  mode?: string,
+  offsetY?: number,
+  offsetX?: number,
+  monthsToShow?: number,
+  startOpen?: boolean,
+  fullscreenMobile?: boolean,
+  inline?: boolean,
+  mobileHeader?: string,
+  disabledDates?: Date[],
+  enabledDates?: Date[],
+  customizedDates?: [],
+  showActionButtons?: boolean,
+  showShortcutsMenuTrigger?: boolean,
+  showMonthYearSelect?: boolean,
+  yearsForSelect?: number,
+  trigger?: string,
+  closeAfterSelect?: boolean,
 ) {
   const options = {
     triggerElementId,

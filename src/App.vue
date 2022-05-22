@@ -3,24 +3,33 @@ import { format } from 'date-fns'
 import { DatePicker } from '~/index'
 import { useDatePicker } from '~/composables/date-picker'
 
-const { dateFormat } = useDatePicker()
-
 let inputDateOne: Date = $ref()
-const inputDateTwo: Date = $ref()
+// const inputDateTwo: Date = $ref()
 const inputSingleDateOne: Date = $ref()
 const inputSingleDateTwo: Date = $ref()
-const buttonDateOne: Date = $ref()
-const buttonDateTwo: Date = $ref()
-const inlineDateOne: Date = $ref()
-const withDisabledDatesDateOne: Date = $ref()
-const callbackDateOne: Date = $ref()
-const callbackDateTwo: Date = $ref()
+// const buttonDateOne: Date = $ref()
+// const buttonDateTwo: Date = $ref()
+// const inlineDateOne: Date = $ref()
+// const withDisabledDatesDateOne: Date = $ref()
+// const callbackDateOne: Date = $ref()
+// const callbackDateTwo: Date = $ref()
 // const sundayFirst = $ref(false)
 let alignRight = $ref(false)
 let showDatePickers = $ref(true)
 let trigger = $ref(false)
 
-const disabledDates = $computed(() => [new Date('2018-12-30'), new Date('2018-12-10'), new Date('2018-12-14')])
+const options = {
+  triggerElementId: 'datepicker-input-single-trigger',
+  inputDateOne,
+
+}
+
+const { dateFormat } = useDatePicker(
+  'datepicker-input-single-trigger',
+  inputDateOne,
+)
+
+// const disabledDates = $computed(() => [new Date('2018-12-30'), new Date('2018-12-10'), new Date('2018-12-14')])
 
 onBeforeMount(() => {
   setTimeout(() => {
@@ -52,32 +61,32 @@ function toggleTrigger() {
   trigger = !trigger
 }
 
-function applyMethod() {
-  // eslint-disable-next-line no-console
-  console.log('apply')
-}
+// function applyMethod() {
+//   // eslint-disable-next-line no-console
+//   console.log('apply')
+// }
 
-function openedMethod() {
-  // eslint-disable-next-line no-console
-  console.log('opened')
-}
+// function openedMethod() {
+//   // eslint-disable-next-line no-console
+//   console.log('opened')
+// }
 
-function closedMethod() {
-  // eslint-disable-next-line no-console
-  console.log('closed')
+// function closedMethod() {
+//   // eslint-disable-next-line no-console
+//   console.log('closed')
 
-  trigger = false
-}
+//   trigger = false
+// }
 
-function cancelledMethod() {
-  // eslint-disable-next-line no-console
-  console.log('cancelled')
-}
+// function cancelledMethod() {
+//   // eslint-disable-next-line no-console
+//   console.log('cancelled')
+// }
 
-function changeMonthMethod(visibleMonths: any) {
-  // eslint-disable-next-line no-console
-  console.log('change months', visibleMonths)
-}
+// function changeMonthMethod(visibleMonths: any) {
+//   // eslint-disable-next-line no-console
+//   console.log('change months', visibleMonths)
+// }
 </script>
 
 <template>
@@ -94,8 +103,8 @@ function changeMonthMethod(visibleMonths: any) {
         Toggle trigger
       </button>
     </div>
-    <div v-if="showDatePickers">
-      <div class="datepicker-container with-input">
+    <div>
+      <!-- <div class="datepicker-container with-input">
         <h3>Range datepicker with input</h3>
         <div class="datepicker-trigger">
           <input
@@ -118,7 +127,7 @@ function changeMonthMethod(visibleMonths: any) {
             @dateTwoSelected="val => { inputDateTwo = val }"
           />
         </div>
-      </div>
+      </div> -->
 
       <div class="datepicker-container single-with-input">
         <h3>Single datepicker with input</h3>
@@ -140,7 +149,7 @@ function changeMonthMethod(visibleMonths: any) {
         </div>
       </div>
 
-      <div class="datepicker-container with-button">
+      <!-- <div class="datepicker-container with-button">
         <h3>Range datepicker with button</h3>
         <div class="datepicker-trigger">
           <button id="datepicker-button-trigger">
@@ -235,7 +244,7 @@ function changeMonthMethod(visibleMonths: any) {
             @next-month="changeMonthMethod"
           />
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
