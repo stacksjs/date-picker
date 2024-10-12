@@ -1,7 +1,7 @@
 {
   "name": "my-lib",
   "version": "0.11.0",
-  "packageManager": "pnpm@7.1.8",
+  "packageManager": "pnpm@7.33.7",
   "description": "The easy way to start your Vue 3 Component Library.",
   "keywords": [
     "component",
@@ -59,43 +59,43 @@
     "commit-msg": "npx commitlint --config ./commitlint.config.ts --edit $1"
   },
   "dependencies": {
-    "date-fns": "^2.28.0",
-    "vue": "^3.2.36"
+    "date-fns": "^2.30.0",
+    "vue": "^3.5.12"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.25.1",
-    "@babel/types": "^7.18.4",
-    "@commitlint/cli": "^17.0.2",
-    "@commitlint/config-conventional": "^17.0.2",
-    "@commitlint/cz-commitlint": "^17.0.0",
-    "@commitlint/types": "^17.0.0",
-    "@iconify-json/heroicons-outline": "^1.1.1",
-    "@iconify-json/heroicons-solid": "^1.1.1",
-    "@types/node": "^17.0.31",
-    "@unocss/preset-icons": "^0.37.4",
-    "@vitejs/plugin-vue": "^2.3.3",
-    "@vue/compiler-sfc": "^3.2.36",
-    "@vueuse/core": "^8.6.0",
-    "bumpp": "^7.1.1",
-    "commitizen": "^4.2.4",
+    "@antfu/eslint-config": "^0.43.1",
+    "@babel/types": "^7.25.8",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@commitlint/cz-commitlint": "^17.8.1",
+    "@commitlint/types": "^17.8.1",
+    "@iconify-json/heroicons-outline": "^1.2.0",
+    "@iconify-json/heroicons-solid": "^1.2.0",
+    "@types/node": "^17.0.45",
+    "@unocss/preset-icons": "^0.63.4",
+    "@vitejs/plugin-vue": "^2.3.4",
+    "@vue/compiler-sfc": "^3.5.12",
+    "@vueuse/core": "^8.9.4",
+    "bumpp": "^7.2.0",
+    "commitizen": "^4.3.1",
     "conventional-changelog-cli": "^2.2.2",
-    "cypress": "^10.0.2",
-    "eslint": "^8.17.0",
-    "eslint-plugin-cypress": "^2.12.1",
-    "inquirer": "^8.2.4",
-    "lint-staged": "^13.0.0",
-    "minimist": "^1.2.6",
+    "cypress": "^10.11.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-cypress": "^2.15.2",
+    "inquirer": "^8.2.6",
+    "lint-staged": "^13.3.0",
+    "minimist": "^1.2.8",
     "prompts": "^2.4.2",
-    "simple-git-hooks": "^2.8.0",
+    "simple-git-hooks": "^2.11.1",
     "sort-package-json": "^1.57.0",
-    "typescript": "^4.7.3",
-    "unocss": "^0.37.4",
-    "unplugin-auto-import": "^0.8.7",
-    "unplugin-vue-components": "^0.19.6",
+    "typescript": "^4.9.5",
+    "unocss": "^0.63.4",
+    "unplugin-auto-import": "^0.18.3",
+    "unplugin-vue-components": "^0.27.4",
     "upath": "^2.0.1",
-    "vite": "^2.9.9",
-    "vitest": "^0.13.1",
-    "vue-tsc": "^0.36.1"
+    "vite": "^2.9.18",
+    "vitest": "^0.34.6",
+    "vue-tsc": "^0.40.13"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": "eslint --fix",
@@ -107,7 +107,7 @@
     }
   },
   "engines": {
-    "node": ">=v16.15.1",
-    "pnpm": ">=7.1.8"
+    "node": ">=16.20.2",
+    "pnpm": ">=7.33.7"
   }
 }
