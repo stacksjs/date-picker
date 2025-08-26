@@ -3,6 +3,16 @@
   "version": "0.11.0",
   "packageManager": "pnpm@7.1.8",
   "description": "The easy way to start your Vue 3 Component Library.",
+  "author": "Chris Breuer <chris@ow3.org>",
+  "license": "MIT",
+  "homepage": "https://github.com/openweblabs/vue-component-library-starter#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openweblabs/vue-component-library-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/openweblabs/vue-component-library-starter/issues"
+  },
   "keywords": [
     "component",
     "library",
@@ -12,51 +22,55 @@
     "starter",
     "kit"
   ],
-  "homepage": "https://github.com/openweblabs/vue-component-library-starter#readme",
-  "bugs": {
-    "url": "https://github.com/openweblabs/vue-component-library-starter/issues"
-  },
-  "license": "MIT",
-  "author": "Chris Breuer <chris@ow3.org>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/openweblabs/vue-component-library-starter.git"
-  },
   "contributors": [
     "Chris Breuer <chris@ow3.org>"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/my-lib.umd.js",
+      "import": "./dist/my-lib.es.js"
+    }
+  },
   "main": "./dist/my-lib.umd.js",
   "module": "./dist/my-lib.es.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/my-lib.umd.js",
-      "import": "./dist/my-lib.es.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "files": [
     "dist",
     "src"
   ],
+  "engines": {
+    "node": ">=v16.15.1",
+    "pnpm": ">=7.1.8"
+  },
   "scripts": {
     "build": "vite build && pnpm run typecheck",
     "dev": "vite dev --open --port 3333",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+
     "commit": "git-cz",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+
     "coverage": "vitest run --coverage",
     "test": "vitest",
+
+    "lint": "bunx --bun eslint .",
+    "lint:fix": "bunx --bun eslint . --fix",
+    "changelog": "bunx logsmith --verbose",
+    "changelog:generate": "bunx logsmith --output CHANGELOG.md",
+    "release": "bun run changelog:generate && bunx bumpx prompt --recursive",
+    "postinstall": "bunx git-hooks",
+
     "test:e2e": "cypress open",
     "test:unit": "vitest",
     "typecheck": "vue-tsc --emitDeclarationOnly",
-    "release": "npx bumpp package.json --execute 'pnpm run changelog' --commit 'chore(release): %s' --tag --push --all",
     "preinstall": "node .scripts/check-for-pnpm.js && node .scripts/check-node-version.mjs"
   },
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged",
-    "commit-msg": "npx commitlint --config ./commitlint.config.ts --edit $1"
+  "git-hooks": {
+    "pre-commit": {
+      "staged-lint": {
+        "*.{js,ts,json,yaml,yml,md}": "bunx --bun eslint --fix"
+      }
+    },
+    "commit-msg": "bunx gitlint --edit .git/COMMIT_EDITMSG"
   },
   "dependencies": {
     "date-fns": "^2.28.0",
@@ -76,18 +90,13 @@
     "@vitejs/plugin-vue": "^2.3.3",
     "@vue/compiler-sfc": "^3.2.36",
     "@vueuse/core": "^8.6.0",
-    "bumpp": "^7.1.1",
     "commitizen": "^4.2.4",
-    "conventional-changelog-cli": "^2.2.2",
     "cypress": "^10.0.2",
     "eslint": "^8.17.0",
     "eslint-plugin-cypress": "^2.12.1",
     "inquirer": "^8.2.4",
-    "lint-staged": "^13.0.0",
     "minimist": "^1.2.6",
     "prompts": "^2.4.2",
-    "simple-git-hooks": "^2.8.0",
-    "sort-package-json": "^1.57.0",
     "typescript": "^4.7.3",
     "unocss": "^0.37.4",
     "unplugin-auto-import": "^0.8.7",
@@ -97,17 +106,9 @@
     "vitest": "^0.13.1",
     "vue-tsc": "^0.36.1"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,vue}": "eslint --fix",
-    "package.json": "sort-package-json"
-  },
   "config": {
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
     }
-  },
-  "engines": {
-    "node": ">=v16.15.1",
-    "pnpm": ">=7.1.8"
   }
 }
