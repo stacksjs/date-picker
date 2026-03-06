@@ -46,28 +46,26 @@
   "scripts": {
     "build": "vite build && pnpm run typecheck",
     "dev": "vite dev --open --port 3333",
-
     "commit": "git-cz",
-
     "coverage": "vitest run --coverage",
     "test": "vitest",
-
-    "lint": "bunx --bun eslint .",
-    "lint:fix": "bunx --bun eslint . --fix",
+    "lint": "bunx --bun pickier .",
+    "lint:fix": "bunx --bun pickier . --fix",
     "changelog": "bunx logsmith --verbose",
     "changelog:generate": "bunx logsmith --output CHANGELOG.md",
     "release": "bun run changelog:generate && bunx bumpx prompt --recursive",
     "postinstall": "bunx git-hooks",
-
     "test:e2e": "cypress open",
     "test:unit": "vitest",
     "typecheck": "vue-tsc --emitDeclarationOnly",
-    "preinstall": "node .scripts/check-for-pnpm.js && node .scripts/check-node-version.mjs"
+    "preinstall": "node .scripts/check-for-pnpm.js && node .scripts/check-node-version.mjs",
+    "format": "bunx --bun pickier . --format",
+    "format:fix": "bunx --bun pickier . --format --write"
   },
   "git-hooks": {
     "pre-commit": {
       "staged-lint": {
-        "*.{js,ts,json,yaml,yml,md}": "bunx --bun eslint --fix"
+        "*.{js,ts,json,yaml,yml,md}": "bunx --bun pickier lint --fix"
       }
     },
     "commit-msg": "bunx gitlint --edit .git/COMMIT_EDITMSG"
@@ -77,7 +75,6 @@
     "vue": "^3.2.36"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.25.1",
     "@babel/types": "^7.18.4",
     "@commitlint/cli": "^17.0.2",
     "@commitlint/config-conventional": "^17.0.2",
@@ -92,8 +89,6 @@
     "@vueuse/core": "^8.6.0",
     "commitizen": "^4.2.4",
     "cypress": "^10.0.2",
-    "eslint": "^8.17.0",
-    "eslint-plugin-cypress": "^2.12.1",
     "inquirer": "^8.2.4",
     "minimist": "^1.2.6",
     "prompts": "^2.4.2",
@@ -104,7 +99,8 @@
     "upath": "^2.0.1",
     "vite": "^2.9.9",
     "vitest": "^0.13.1",
-    "vue-tsc": "^0.36.1"
+    "vue-tsc": "^0.36.1",
+    "bun-git-hooks": "^0.3.1"
   },
   "config": {
     "commitizen": {
