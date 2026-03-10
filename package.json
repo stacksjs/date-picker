@@ -1,7 +1,7 @@
 {
-  "name": "my-lib",
+  "name": "date-picker",
+  "type": "module",
   "version": "0.11.0",
-  "packageManager": "pnpm@7.1.8",
   "description": "The easy way to start your Vue 3 Component Library.",
   "author": "Chris Breuer <chris@ow3.org>",
   "license": "MIT",
@@ -39,10 +39,6 @@
     "dist",
     "src"
   ],
-  "engines": {
-    "node": ">=v16.15.1",
-    "pnpm": ">=7.1.8"
-  },
   "scripts": {
     "build": "vite build && pnpm run typecheck",
     "dev": "vite dev --open --port 3333",
@@ -58,7 +54,6 @@
     "test:e2e": "cypress open",
     "test:unit": "vitest",
     "typecheck": "vue-tsc --emitDeclarationOnly",
-    "preinstall": "node .scripts/check-for-pnpm.js && node .scripts/check-node-version.mjs",
     "format": "bunx --bun pickier . --format",
     "format:fix": "bunx --bun pickier . --format --write"
   },
