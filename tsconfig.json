@@ -22,7 +22,6 @@
     "outDir": "dist",
     "types": [
       "vite/client",
-      "vue/ref-macros",
       "node"
     ],
     "paths": {
