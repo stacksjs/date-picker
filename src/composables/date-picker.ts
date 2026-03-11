@@ -141,7 +141,7 @@ const visibleMonths = $computed(() => {
     firstDateOfMonth: string
   }
 
-  const firstMonthArray: FirstMonth | string[] = months.filter((m, index: number) => index > 0)
+  const firstMonthArray: FirstMonth | string[] = months.filter((_m, index: number) => index > 0)
   const numberOfMonthsArray = []
 
   for (let i = 0; i < showMonths; i++)
@@ -728,7 +728,8 @@ function selectDate(date: any) {
     selectedDate2 = date
     isSelectingDate1 = true
 
-    if (isAfter(selectedDate1 as Date, date)) { selectedDate1 = null }
+    if (isAfter(selectedDate1 as Date, date))
+      selectedDate1 = null
 
     else if (showActionButtons) {
       // if user has selected both dates, focus the apply button for accessibility
@@ -1036,7 +1037,10 @@ export function useDatePicker(
   mobileHeader?: string,
   disabledDates?: Date[],
   enabledDates?: Date[],
-  customizedDates?: { dates: Date[]; cssClass: string },
+  customizedDates?: {
+    dates: Date[]
+    cssClass: string
+  },
   showActionButtons?: boolean,
   showShortcutsMenuTrigger?: boolean,
   showMonthYearSelect?: boolean,
