@@ -1,3 +1,5 @@
+/// <reference types="vue/jsx" />
+
 declare interface Window {
   // extend the window
 }

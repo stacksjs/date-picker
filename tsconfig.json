@@ -39,11 +39,13 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/components/**/*.vue",
+    "src/index.ts"
   ],
   "exclude": [
     "dist",
     "node_modules",
-    "cypress"
+    "cypress",
+    "src/App.vue"
   ]
 }

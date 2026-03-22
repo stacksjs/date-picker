@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDatePicker } from '~/composables/date-picker'
 
-interface Props {
+export interface Props {
   triggerElementId: string
   dateOne: Date
   dateTwo: Date
@@ -25,7 +25,7 @@ interface Props {
   showShortcutsMenuTrigger: boolean
   showMonthYearSelect: boolean
   yearsForSelect: number
-  trigger: boolean
+  trigger: string
   closeAfterSelect: boolean
 }
 
@@ -49,8 +49,8 @@ const {
   showActionButtons = true,
   showShortcutsMenuTrigger = true,
   showMonthYearSelect = true,
-  yearsForSelect = true,
-  trigger = false,
+  yearsForSelect = 10,
+  trigger = '',
   closeAfterSelect = false,
 } = defineProps<Props>()
 

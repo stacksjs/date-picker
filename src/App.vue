@@ -1,32 +1,31 @@
 <script setup lang="ts">
+import { ref, onBeforeMount } from 'vue'
 import { format } from 'date-fns'
 import { DatePicker } from '~/index'
 import { useDatePicker } from '~/composables/date-picker'
 
-let dateOne: Date = $ref()
-const dateTwo: Date = $ref()
+const dateOne = ref<Date>(new Date())
+const dateTwo = ref<Date>(new Date())
 
 const { dateFormat } = useDatePicker(
   'datepicker-input-single-trigger',
-  dateOne,
+  dateOne.value,
 )
-
-// const disabledDates = $computed(() => [new Date('2018-12-30'), new Date('2018-12-10'), new Date('2018-12-14')])
 
 onBeforeMount(() => {
   setTimeout(() => {
-    dateOne = new Date('2019-01-12')
+    dateOne.value = new Date('2019-01-12')
   }, 5000)
 })
 
-function formatDates(dateOne: any, dateTwo?: any) {
+function formatDates(dateOneVal: any, dateTwoVal?: any) {
   let formattedDates = ''
 
-  if (dateOne)
-    formattedDates = format(dateOne, dateFormat)
+  if (dateOneVal)
+    formattedDates = format(dateOneVal, dateFormat.value)
 
-  if (dateTwo)
-    formattedDates += ` - ${format(dateTwo, dateFormat)}`
+  if (dateTwoVal)
+    formattedDates += ` - ${format(dateTwoVal, dateFormat.value)}`
 
   return formattedDates
 }
@@ -44,10 +43,10 @@ function formatDates(dateOne: any, dateTwo?: any) {
     trigger-element-id="datepicker-trigger"
     mode="range"
     :fullscreen-mobile="true"
-    :date-one="new Date(dateOne)"
-    :date-two="new Date(dateTwo)"
-    @date-one-selected="val => { dateOne = val }"
-    @date-two-selected="val => { dateTwo = val }"
+    :date-one="new Date(dateOne as any)"
+    :date-two="new Date(dateTwo as any)"
+    @date-one-selected="(val: any) => { dateOne = val }"
+    @date-two-selected="(val: any) => { dateTwo = val }"
   />
 </template>
 
