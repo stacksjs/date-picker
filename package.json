@@ -40,7 +40,7 @@
     "src"
   ],
   "scripts": {
-    "build": "vite build && pnpm run typecheck",
+    "build": "vite build && bun run typecheck",
     "dev": "vite dev --open --port 3333",
     "commit": "git-cz",
     "coverage": "vitest run --coverage",
